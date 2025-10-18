@@ -1,0 +1,11 @@
+
+body {
+            background-color: rgba(228, 252, 254, 0.75);
+            color: white; 
+        }
+
+.card-style{
+            border-radius: 10px; /* Bordas arredondadas */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            transition: transform 0.3s ease; /* Transição para efeitos de hover */
+        }
