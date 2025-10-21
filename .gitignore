@@ -1,0 +1,7 @@
+VLDocesWeb/bin/Debug/net9.0/VLDocesWeb.dll
+
+# Ignorar a pasta bin/
+bin/
+
+# Ignorar a pasta obj/
+obj/
