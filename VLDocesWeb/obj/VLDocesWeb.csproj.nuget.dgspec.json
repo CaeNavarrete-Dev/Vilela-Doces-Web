@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\TrabalhoInter\\VLDocesWeb\\VLDocesWeb.csproj": {}
+    "C:\\Users\\Marina\\Vilela-Doces-Web\\VLDocesWeb\\VLDocesWeb.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\TrabalhoInter\\VLDocesWeb\\VLDocesWeb.csproj": {
+    "C:\\Users\\Marina\\Vilela-Doces-Web\\VLDocesWeb\\VLDocesWeb.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\TrabalhoInter\\VLDocesWeb\\VLDocesWeb.csproj",
+        "projectUniqueName": "C:\\Users\\Marina\\Vilela-Doces-Web\\VLDocesWeb\\VLDocesWeb.csproj",
         "projectName": "VLDocesWeb",
-        "projectPath": "C:\\Dev\\TrabalhoInter\\VLDocesWeb\\VLDocesWeb.csproj",
-        "packagesPath": "C:\\Users\\caeta\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\TrabalhoInter\\VLDocesWeb\\obj\\",
+        "projectPath": "C:\\Users\\Marina\\Vilela-Doces-Web\\VLDocesWeb\\VLDocesWeb.csproj",
+        "packagesPath": "C:\\Users\\Marina\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Marina\\Vilela-Doces-Web\\VLDocesWeb\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\caeta\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Marina\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

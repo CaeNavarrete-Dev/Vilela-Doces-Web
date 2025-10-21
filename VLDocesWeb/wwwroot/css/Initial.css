@@ -1,0 +1,63 @@
+/* Cor de Fundo da Tela */
+body {
+    background-color: #E4FCFE; /* Cor de fundo da tela */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    /* Garante que o body ocupe toda a altura da janela */
+    min-height: 100vh; 
+}
+
+/* Estilo para a linha fina do cabeçalho */
+.header-usuario {
+    background-color: #E4FCFE; /* Mantém a cor do fundo */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Linha fina sutil */
+}
+
+.header-usuario p {
+    font-size: 0.9rem; /* Tamanho do texto um pouco menor */
+    color: #555 !important; /* Cor mais escura para o texto */
+}
+
+/* Alinhamento do Conteúdo ao centro (vh-100 é do Bootstrap, mas ajustaremos) */
+/* Ajuste para centralizar o bloco abaixo do cabeçalho */
+.vh-100-custom {
+    /* Altura da tela menos a altura do cabeçalho */
+    height: calc(100vh - 35px); 
+}
+
+/* Contêiner dos botões para definir a largura do bloco */
+.menu-container {
+    width: 100%;
+    max-width: 300px; /* Largura ideal para um menu vertical centralizado */
+}
+
+/* Estilo dos Botões Personalizados */
+.btn-custom {
+    /* Cor de Fundo: #8C543F */
+    background-color: #8C543F; 
+    /* Cor do Texto: Branco */
+    color: white; 
+    /* Removendo a borda padrão do bootstrap */
+    border: none; 
+    /* Aumentando o tamanho da fonte para destacar */
+    font-size: 1.1rem; 
+    /* Deixando as bordas mais suaves */
+    border-radius: 0.5rem; 
+    /* Adicionando sombra para profundidade */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Transição para efeito hover suave */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efeito ao passar o mouse */
+.btn-custom:hover {
+    background-color: #6a4130; /* Cor um pouco mais escura no hover */
+    color: white; /* Mantém o texto branco */
+    /* Efeito sutil de "levantar" */
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo para os ícones */
+.btn-custom i {
+    min-width: 20px; /* Garante que os ícones fiquem alinhados */
+}
