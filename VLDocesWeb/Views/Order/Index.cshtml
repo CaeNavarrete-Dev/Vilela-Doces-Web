@@ -1,0 +1,59 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Order";
+}
+
+
+<style>
+    .card img {
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .page-order {
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    .amount_button{
+        width: 35px;
+        height: 35px;
+        border: 2px solid #000;
+        border-radius: 50%;
+        background-color: transparent;
+        color: #000;
+        font-weight: bold;
+        font-size: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease-in-out;
+        margin-right: 5px;
+    }
+    .amount_button:hover {
+        background-color: #000;
+        color: #fff;
+        transform: scale(1.1);
+    }
+</style>
+<div class="container text-end">
+    <a href="\Cart\Index" class="btn btn-primary btn-lg" tabindex="-1" role="button">Primary link</a>>
+</div>
+<div class="container page-order text-white">
+    <div class="row g-4">
+ 
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+                <img src="~/lib/img_doceTeste.jpeg" class="card-img-top" alt="Imagem 1" />
+                <div class="card-body">
+                    <h5 class="card-title">Card title 1</h5>
+                    <p class="card-text">Texto de exemplo para o primeiro card.</p>
+                </div>
+                <div class="card-body d-flex align-items-center gap-1">
+                    <button class="amount_button">+</button>
+                    <div class="fw-bold">1</div>
+                    <button class="amount_button">-</button>
+                </div>
+            </div>
+        </div>      
+    </div>
+</div>
