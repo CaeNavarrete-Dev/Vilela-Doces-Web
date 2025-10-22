@@ -4,7 +4,7 @@ namespace VLDocesWeb.Controllers;
 
 public class InitialController : Controller
 {
-    public ActionResult Initial()
+    public ActionResult Index()
     {
         return View();
     }
