@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Initial";
+}
+<body>
+
+    <div class="header-usuario text-end">
+        <p class="text-muted">Olá, usuário-logado!</p>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center vh-100-custom">
+        <div class="btn-container text-center">
+            
+            <h1 class="mb-5 text-dark">Bem-Vindo(a)</h1>
+
+            <a href="../Order/Index" class="btn btn-custom d-block mb-3 p-3 text-center">
+                Fazer Encomenda
+            </a>
+
+            <a href="../Order/Index" class="btn btn-custom d-block mb-3 p-3 text-center">
+                Fazer Reserva
+            </a>
+
+            <a href="#" class="btn btn-custom d-block mb-3 p-3 text-center">
+                Histórico de Pedidos
+            </a>
+        </div>
+    </div>
+</body>
+</html>
