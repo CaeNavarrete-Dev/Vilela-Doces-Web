@@ -1,11 +1,130 @@
-
+/* Cor de Fundo da Tela */
 body {
-    background-color: rgba(228, 252, 254, 0.75);
-    color: white; 
+    background-color: #E4FCFE; /* Cor de fundo da tela */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    /* Garante que o body ocupe toda a altura da janela */
+    min-height: 100vh; 
 }
+
+.navbar {
+    background-color: #8C543F;
+}
+
 .card-style{
     background-color: rgba(140, 84, 63, 1);
     border-radius: 10px; /* Bordas arredondadas */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
     transition: transform 0.3s ease; /* Transição para efeitos de hover */
+}
+
+/**** Estilo tela Initial ****/
+/* Estilo para a linha fina do Olá, usuário-logado */
+.header-usuario {
+    background-color: #E4FCFE; /* Mantém a cor do fundo */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Linha fina sutil */
+}
+
+.header-usuario p {
+    font-size: 0.9rem; /* Tamanho do texto um pouco menor */
+    color: #555 !important; /* Cor mais escura para o texto */
+}
+
+ .vh-100-custom {
+    height: calc(100vh - 35vh); 
+}
+
+/* Contêiner dos botões para definir a largura do bloco */
+.btn-container {
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Estilo dos Botões Personalizados */
+.btn-custom {
+    background-color: #8C543F; 
+    color: white;
+    border: none;
+    font-size: 1.1rem; 
+    border-radius: 0.5rem; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efeito ao passar o mouse */
+.btn-custom:hover {
+    background-color: #6a4130; /* Cor um pouco mais escura no hover */
+    color: white; /* Mantém o texto branco */
+    /* Efeito sutil de "levantar" */
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/**** Estilo tela Order ****/
+.card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+.page-order {
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+.amount_button{
+    width: 35px;
+    height: 35px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    background-color: transparent;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    margin-right: 5px;
+}
+.amount_button:hover {
+    background-color: #000;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/**** Estilo tela Kart ****/
+/* Estilo geral para o fundo, se você quiser manter o mesmo da tela inicial */
+/* Estilo para a imagem do item */
+.item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção */
+    border-radius: 0.25rem;
+}
+
+/* Estilo do controle de quantidade */
+.quantity-control {
+    max-width: 130px; /* Limita a largura do grupo de botões e input */
+}
+
+.quantity-control .btn {
+    width: 35px; /* Define uma largura fixa para os botões */
+}
+
+.quantity-input {
+    background-color: white; /* Garante que o input seja branco e não editável */
+    border-left: none;
+    border-right: none;
+}
+
+/* Estilo para dar mais destaque à linha de cada item */
+.item-carrinho {
+    border-bottom: 1px solid #eee;
+}
+
+.item-carrinho:hover {
+    background-color: #f5f5f5; /* Efeito hover suave na linha do item */
+}
+
+/* Estilo para o preço total */
+.item-total-price h5 {
+    font-weight: 700;
 }
