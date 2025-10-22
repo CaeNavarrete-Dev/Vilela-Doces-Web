@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Aluno.FATECRIOPRETO\\Documents\\TrabalhoInter_Cae\\Vilela-Doces-Web-main\\Vilela-Doces-Web-main\\VLDocesWeb\\VLDocesWeb.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Aluno.FATECRIOPRETO\\Documents\\TrabalhoInter_Cae\\Vilela-Doces-Web-main\\Vilela-Doces-Web-main\\VLDocesWeb\\VLDocesWeb.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Aluno.FATECRIOPRETO\\Documents\\TrabalhoInter_Cae\\Vilela-Doces-Web-main\\Vilela-Doces-Web-main\\VLDocesWeb\\VLDocesWeb.csproj",
+        "projectName": "VLDocesWeb",
+        "projectPath": "C:\\Users\\Aluno.FATECRIOPRETO\\Documents\\TrabalhoInter_Cae\\Vilela-Doces-Web-main\\Vilela-Doces-Web-main\\VLDocesWeb\\VLDocesWeb.csproj",
+        "packagesPath": "C:\\Users\\Aluno.FATECRIOPRETO\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Aluno.FATECRIOPRETO\\Documents\\TrabalhoInter_Cae\\Vilela-Doces-Web-main\\Vilela-Doces-Web-main\\VLDocesWeb\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Aluno.FATECRIOPRETO\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
