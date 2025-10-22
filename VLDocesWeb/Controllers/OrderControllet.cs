@@ -7,4 +7,9 @@ public class OrderController : Controller
     {
         return View();
     }
+
+    public ActionResult Cart()
+    {
+        return View("Cart");
+    }
 }

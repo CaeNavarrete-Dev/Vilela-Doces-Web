@@ -89,3 +89,42 @@ body {
     color: #fff;
     transform: scale(1.1);
 }
+
+/**** Estilo tela Kart ****/
+/* Estilo geral para o fundo, se você quiser manter o mesmo da tela inicial */
+/* Estilo para a imagem do item */
+.item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção */
+    border-radius: 0.25rem;
+}
+
+/* Estilo do controle de quantidade */
+.quantity-control {
+    max-width: 130px; /* Limita a largura do grupo de botões e input */
+}
+
+.quantity-control .btn {
+    width: 35px; /* Define uma largura fixa para os botões */
+}
+
+.quantity-input {
+    background-color: white; /* Garante que o input seja branco e não editável */
+    border-left: none;
+    border-right: none;
+}
+
+/* Estilo para dar mais destaque à linha de cada item */
+.item-carrinho {
+    border-bottom: 1px solid #eee;
+}
+
+.item-carrinho:hover {
+    background-color: #f5f5f5; /* Efeito hover suave na linha do item */
+}
+
+/* Estilo para o preço total */
+.item-total-price h5 {
+    font-weight: 700;
+}
