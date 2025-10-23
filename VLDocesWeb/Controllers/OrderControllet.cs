@@ -17,4 +17,9 @@ public class OrderController : Controller
     {
         return View("Address");
     }
+
+    public ActionResult Payment()
+    {
+        return View("Payment");
+    }
 }

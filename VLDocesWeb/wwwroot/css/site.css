@@ -131,7 +131,7 @@ body {
 
 /**** Estilo tela Address ****/
 /* Estilo para a opção de rádio em si */
-.address-option {
+.radio-option {
     position: relative;
     cursor: pointer;
     /* Linha fina e sutil que separa os itens, conforme solicitado */
@@ -139,12 +139,12 @@ body {
 }
 
 /* Remove a borda do último item para melhor estética */
-.address-option:last-of-type {
+.radio-option:last-of-type {
     border-bottom: none !important;
 }
 
 /* Efeito sutil de hover nas opções */
-.address-option:hover {
+.radio-option:hover {
     background-color: #f0f4f7; 
     border-radius: 0.3rem;
 }
@@ -171,4 +171,11 @@ body {
 .total-line {
     padding-top: 10px;
     border-top: 2px solid #ddd;
+}
+
+/**** Estilo tela Payment ****/
+/* Estilo específico para a área do PIX (opcional, já é estilizada pelo Bootstrap) */
+#pix-details {
+    /* Adiciona um pouco de padding e borda se precisar destacar mais */
+    border: 2px solid #28a745 !important; /* Borda verde para PIX */
 }
