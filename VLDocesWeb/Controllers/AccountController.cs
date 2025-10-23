@@ -16,4 +16,10 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    public ActionResult CadastroEnd()
+    {
+        return View();
+    }
 }
