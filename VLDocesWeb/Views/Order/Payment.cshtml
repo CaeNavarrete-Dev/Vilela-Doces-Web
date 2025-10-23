@@ -1,0 +1,143 @@
+@{
+  Layout = "_FluxoPedido";
+  ViewData["Title"] = "Cart";
+  ViewData["Layout-Title"] = "Forma de Pagamento";
+}
+<div class="row">      
+  <div class="col-md-8">
+    <div class="card p-4 shadow-sm bg-light-subtle">
+      <div class="form-check p-3 mb-3 border-bottom payment-option">
+        <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoDinheiro" value="dinheiro" checked onchange="handlePaymentChange()">
+        <label class="form-check-label ms-2 d-block" for="opcaoDinheiro">
+            <strong class="text-dark">Dinheiro (Pagamento na Entrega)</strong>
+            <p class="mb-0 text-muted">Informe se precisará de troco no próximo passo.</p>
+        </label>
+      </div>
+
+      <div class="form-check p-3 mb-3 border-bottom payment-option">
+        <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoPix" value="pix" onchange="handlePaymentChange()">
+        <label class="form-check-label ms-2 d-block" for="opcaoPix">
+            <strong class="text-dark">PIX</strong>
+            <p class="mb-0 text-muted">Pagamento instantâneo. O pedido só será processado após a confirmação do PIX.</p>
+        </label>
+      </div>
+      
+      <div id="troco-details" class="p-3 mt-4 bg-white border rounded shadow-sm">
+        <h5 class="text-success mb-3">Informações de Troco</h5>
+        <p class="text-muted small mb-3">O total do seu pedido é: <span class="fw-bold">R$ 47,00</span></p>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" value="" id="naoPrecisoTroco">
+          <label class="form-check-label mt-1" for="naoPrecisoTroco">
+              Não preciso de troco.
+          </label>
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-text bg-light"> Preciso de troco para:</span>
+          <input type="number" class="form-control" placeholder="Ex: 50,00" id="valor-troco-input" min="47.00" step="any">
+        </div>
+        <p class="text-danger small mt-2">O valor precisa ser maior que o Total a Pagar.</p>
+      </div>
+      
+      <div id="pix-details" class="p-3 mt-4 bg-white border rounded shadow-sm"> 
+        <h5 class="text-center text-success mb-3">Detalhes para Pagamento PIX</h5>
+
+        <div class="text-center mb-4">
+          <img src="https://pngimg.com/uploads/qr_code/qr_code_PNG33.png" class="img-fluid border p-1" alt="QR Code PIX" style="max-width: 180px;">
+          <p class="mt-2 text-muted small">Escaneie o código com o aplicativo do seu banco.</p>
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light"><i class="fas fa-key"></i> Chave:</span>
+          <input type="text" class="form-control" value="vileladoces@email.com" id="pix-key-input" readonly>
+          <button class="btn btn-outline-secondary" type="button" id="copy-pix-key">
+              <i class="fas fa-copy"></i> Copiar
+          </button>
+        </div>
+
+        <p class="text-danger small text-center">O valor total a ser pago é: <span class="fw-bold">R$ 47,00</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-4 shadow-lg sticky-top resumo-card">
+      <h4 class="card-title">Resumo do Pedido</h4>
+      <hr>
+
+      <div class="d-flex justify-content-between text-muted small">
+        <span>Subtotal:</span>
+        <span>R$ 47,00</span>
+      </div>
+      <div class="d-flex justify-content-between text-muted small mb-2">
+        <span>Frete:</span>
+        <span id="valor-frete">R$ 0,00</span>
+      </div>
+      
+      <div class="d-flex justify-content-between mt-2 total-line">
+        <span class="fs-4">Total a Pagar:</span>
+        <span class="fs-4 fw-bold text-success" id="total-geral">R$ 47,00</span>
+      </div>
+      
+      <button class="btn btn-lg btn-primary mt-4" type="button">
+        <i class="fas fa-check-circle me-2"></i> Confirmar Pedido
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const pixDetails = document.getElementById('pix-details');
+    const trocoDetails = document.getElementById('troco-details');
+    const pixRadio = document.getElementById('opcaoPix');
+    const dinheiroRadio = document.getElementById('opcaoDinheiro');
+    const copyButton = document.getElementById('copy-pix-key');
+    const naoPrecisoTrocoCheckbox = document.getElementById('naoPrecisoTroco');
+    const valorTrocoInput = document.getElementById('valor-troco-input');
+
+    function toggleTrocoInput() {
+      if (naoPrecisoTrocoCheckbox.checked) {
+        valorTrocoInput.disabled = true;
+        valorTrocoInput.value = ''; 
+      } else {
+        valorTrocoInput.disabled = false;
+        valorTrocoInput.focus();
+      }
+    }
+
+    if (naoPrecisoTrocoCheckbox) {
+      naoPrecisoTrocoCheckbox.addEventListener('change', toggleTrocoInput);
+    }
+    
+    toggleTrocoInput();
+
+    window.handlePaymentChange = function() {
+      if (dinheiroRadio.checked) {
+        trocoDetails.classList.remove('d-none');
+        pixDetails.classList.add('d-none');
+      } else if (pixRadio.checked) {
+        pixDetails.classList.remove('d-none');
+        trocoDetails.classList.add('d-none');
+      } else {
+        trocoDetails.classList.add('d-none');
+        pixDetails.classList.add('d-none');
+      }
+    };
+
+    if (copyButton) {
+      copyButton.addEventListener('click', function() {
+        const pixKeyInput = document.getElementById('pix-key-input');
+        pixKeyInput.select();
+        pixKeyInput.setSelectionRange(0, 99999); 
+        document.execCommand("copy");
+        
+        copyButton.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+        setTimeout(() => {
+          copyButton.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+        }, 1500);
+      });
+    }
+    
+    handlePaymentChange();
+  });
+</script>

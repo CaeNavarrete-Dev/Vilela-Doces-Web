@@ -12,4 +12,14 @@ public class OrderController : Controller
     {
         return View("Cart");
     }
+
+    public ActionResult Address()
+    {
+        return View("Address");
+    }
+
+    public ActionResult Payment()
+    {
+        return View("Payment");
+    }
 }
