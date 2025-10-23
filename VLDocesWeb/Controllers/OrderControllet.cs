@@ -12,4 +12,9 @@ public class OrderController : Controller
     {
         return View("Cart");
     }
+
+    public ActionResult Address()
+    {
+        return View("Address");
+    }
 }

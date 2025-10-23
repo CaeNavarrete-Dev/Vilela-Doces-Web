@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = @ViewData["Title"];
+}
+<body>
+    <div class="container my-5">
+        <h1 class="mb-4 display-5">@ViewData["Layout-Title"]</h1>
+
+        @RenderBody()
+
+        <!-- <div class="row mt-5 justify-content-end">
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <h4 class="card-title">Resumo do Pedido</h4>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fs-5">Total Geral:</span>
+                        <span class="fs-5 fw-bold text-primary" id="total-geral">R$ 47,00</span>
+                    </div>
+                    <button class="btn btn-success btn-lg mt-3" type="button">
+                        Continuar   <i class="fas fa-arrow-right me-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>

@@ -1,0 +1,71 @@
+@{
+    Layout = "_FluxoPedido";
+    ViewData["Title"] = "Cart";
+    ViewData["Layout-Title"] = "Local de Entrega";
+}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card p-4 shadow-sm bg-light-subtle">
+
+            <div class="form-check p-3 mb-3 border-bottom address-option">
+                <input class="form-check-input" type="radio" name="enderecoOpcao" id="opcaoRetirada" value="retirada" checked>
+                <label class="form-check-label ms-2 d-block" for="opcaoRetirada">
+                    <strong class="text-dark">Retirar na Loja (Grátis)</strong>
+                    <p class="mb-0 text-muted">Disponível para retirada em 30 minutos após a confirmação do pagamento.</p>
+                    <small class="text-secondary">Endereço da Loja: Rua Exemplo, 123 - Centro, Cidade/UF</small>
+                </label>
+            </div>
+
+            <div class="form-check p-3 mb-3 border-bottom address-option">
+                <input class="form-check-input" type="radio" name="enderecoOpcao" id="endereco1" value="1">
+                <label class="form-check-label ms-2 d-block" for="endereco1">
+                    <strong class="text-dark">Minha Casa (Endereço Padrão)</strong>
+                    <p class="mb-0">Rua das Flores, 456, Apto 101</p>
+                    <p class="mb-0 text-muted">Bairro Jardins - São Paulo/SP - CEP: 01000-000</p>
+                    <small class="text-success">Estimativa de entrega: 45-60 minutos</small>
+                </label>
+            </div>
+
+            <div class="form-check p-3 mb-3 border-bottom address-option">
+                <input class="form-check-input" type="radio" name="enderecoOpcao" id="endereco2" value="2">
+                <label class="form-check-label ms-2 d-block" for="endereco2">
+                    <strong class="text-dark">Endereço do Trabalho</strong>
+                    <p class="mb-0">Av. Principal, 789, Sala 505</p>
+                    <p class="mb-0 text-muted">Bairro Empresarial - Campinas/SP - CEP: 13000-000</p>
+                    <small class="text-success">Estimativa de entrega: 60-75 minutos</small>
+                </label>
+            </div>
+
+            <div class="p-3">
+                <a href="#" class="text-decoration-none">
+                    <i class="fas fa-plus-circle me-2"></i> Adicionar novo endereço
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4 shadow-lg sticky-top resumo-card">
+            <h4 class="card-title">Resumo do Pedido</h4>
+            <hr>
+
+            <div class="d-flex justify-content-between text-muted small">
+                <span>Itens (3)</span>
+                <span>R$ 47,00</span>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-2">
+                <span>Frete:</span>
+                <span id="valor-frete">R$ 0,00</span> </div>
+            
+            <div class="d-flex justify-content-between mt-2 total-line">
+                <span class="fs-4">Total a Pagar:</span>
+                <span class="fs-4 fw-bold text-success" id="total-geral">R$ 47,00</span>
+            </div>
+            
+            <button class="btn btn-lg btn-success mt-4" type="button">
+                <i class="fas fa-credit-card me-2"></i> Ir para o Pagamento
+            </button>
+        </div>
+    </div>
+</div>

@@ -90,7 +90,7 @@ body {
     transform: scale(1.1);
 }
 
-/**** Estilo tela Kart ****/
+/**** Estilo tela Cart ****/
 /* Estilo geral para o fundo, se você quiser manter o mesmo da tela inicial */
 /* Estilo para a imagem do item */
 .item-img {
@@ -127,4 +127,48 @@ body {
 /* Estilo para o preço total */
 .item-total-price h5 {
     font-weight: 700;
+}
+
+/**** Estilo tela Address ****/
+/* Estilo para a opção de rádio em si */
+.address-option {
+    position: relative;
+    cursor: pointer;
+    /* Linha fina e sutil que separa os itens, conforme solicitado */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Remove a borda do último item para melhor estética */
+.address-option:last-of-type {
+    border-bottom: none !important;
+}
+
+/* Efeito sutil de hover nas opções */
+.address-option:hover {
+    background-color: #f0f4f7; 
+    border-radius: 0.3rem;
+}
+
+/* Garante que o input (radio button) esteja bem posicionado */
+.form-check-input {
+    margin-top: 0.5rem;
+    /* Estilo de cores que você pode personalizar */
+    border-color: #8C543F; 
+}
+
+/* Estilo para o radio button marcado (mantendo a cor tema) */
+.form-check-input:checked {
+    background-color: #8C543F;
+    border-color: #8C543F;
+}
+
+/* Para o Resumo do Pedido, faz ele "grudar" no topo ao rolar */
+.resumo-card {
+    top: 20px; /* Distância do topo */
+}
+
+/* Destaque para a linha de total */
+.total-line {
+    padding-top: 10px;
+    border-top: 2px solid #ddd;
 }
