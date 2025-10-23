@@ -1,6 +1,6 @@
 namespace VLDocesWeb.Models;
 
-public class User
+public abstract class User
 {
     public int Id { get; set; }              // Identificador do usuário
     public string Nome { get; set; }         // Nome completo

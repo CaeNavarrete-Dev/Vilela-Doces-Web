@@ -20,6 +20,7 @@ public class CustomerMemoryRepository : ICustomerRepository
 
     public void Register(Customer customer)
     {
+        Console.WriteLine($"Novo cliente: {customer.Nome} | {customer.Email} | {customer.Senha}");
         customer.Id = _customers.Count + 1;
         _customers.Add(customer);
         return;
