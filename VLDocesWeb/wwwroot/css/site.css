@@ -129,7 +129,7 @@ body {
     font-weight: 700;
 }
 
-<<<<<<< HEAD
+
 /**** Estilo tela CadastroEnd ****/
 
 .cadastro-container {
@@ -188,7 +188,6 @@ body {
 .btn-cancelar:hover {
     background-color: #56301f; /* marrom um pouco mais escuro no hover */
 }
-=======
 /**** Estilo tela Address ****/
 /* Estilo para a opção de rádio em si */
 .radio-option {
@@ -239,4 +238,3 @@ body {
     /* Adiciona um pouco de padding e borda se precisar destacar mais */
     border: 2px solid #28a745 !important; /* Borda verde para PIX */
 }
->>>>>>> e6f1220d0c6d0e9ea1d3e3a215816b512995bf31
