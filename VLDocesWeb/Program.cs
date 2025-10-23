@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddSingleton<ICustomerRepository, CustomerMemoryRepository>();
+builder.Services.AddSingleton<IProductRepository, ProductMemoryRepository>();
 
 
 
