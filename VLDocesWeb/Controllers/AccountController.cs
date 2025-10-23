@@ -13,6 +13,12 @@ public class AccountController : Controller
     {
         this.repository = repository;
     }
+    [HttpGet]
+    public ActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Login", "Account");
+    }
 
     [HttpGet]
     public ActionResult Login()
@@ -30,6 +36,8 @@ public class AccountController : Controller
         }
         HttpContext.Session.SetString("UserName", login.Nome);
         HttpContext.Session.SetString("UserEmail", login.Email);
+        HttpContext.Session.SetString("UserCPF", login.CPF);
+        HttpContext.Session.SetString("UserTelefone", login.Telefone);
         return RedirectToAction("Index","Initial");
     }
 
