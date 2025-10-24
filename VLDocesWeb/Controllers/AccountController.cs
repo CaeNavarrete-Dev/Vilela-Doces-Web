@@ -53,4 +53,10 @@ public class AccountController : Controller
         repository.Register(customer);
         return RedirectToAction("Login");
     }
+
+    [HttpGet]
+    public ActionResult CadastroEnd()
+    {
+        return View();
+    }
 }

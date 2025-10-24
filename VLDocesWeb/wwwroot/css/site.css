@@ -66,10 +66,10 @@ body {
 .amount_button{
     width: 35px;
     height: 35px;
-    border: 2px solid #000;
+    border: 2px solid#6a4130;
     border-radius: 50%;
     background-color: transparent;
-    color: #000;
+    color: #6a4130;
     font-weight: bold;
     font-size: 18px;
     display: inline-flex;
@@ -79,7 +79,7 @@ body {
     margin-right: 5px;
 }
 .amount_button:hover {
-    background-color: #000;
+    background-color: #6a4130;
     color: #fff;
     transform: scale(1.1);
 }
@@ -118,6 +118,64 @@ body {
     font-weight: 700;
 }
 
+
+/**** Estilo tela CadastroEnd ****/
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.cadastro-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 6px #0000001a;
+}
+
+.cadastro-card .titulo {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #6a4130; 
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.form-group label {
+    color: #6a4130; 
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #6a4130;
+    padding: 8px 12px;
+    color: #6a4130; 
+}
+
+.btn-finalizar,
+.btn-cancelar {
+    background-color: #6a4130; 
+    color: #ffffff;
+    width: 150px;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-finalizar:hover,
+.btn-cancelar:hover {
+    background-color: #56301f; 
+}
 /**** Estilo tela Address ****/
 .radio-option {
     position: relative;
