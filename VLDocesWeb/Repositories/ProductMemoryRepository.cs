@@ -24,12 +24,20 @@ public ProductMemoryRepository()
      {
         Create(new Product
         {
-            Nome = "Brigadeiro Tradicional",
-            Descricao = "Delicioso brigadeiro de chocolate com granulado macio.",
-            Preco = 3.50f,
+            Nome = "Pão de Mel Gourmet",
+            Descricao = "Delicioso com cobertura de chocolate e recheio cremoso.",
+            Preco = 6.0f,
             Id_Categoria = 1 // Assumindo que 1 = Doces Tradicionais
         });
 
+        Create(new Product
+        {
+            Nome = "Torta de Limão Siciliano",
+            Descricao = "Pedaço de torta de limão siciliano cremosa.",
+            Preco = 35.00f,
+            Id_Categoria = 1
+        });
+        
         Create(new Product
         {
             Nome = "Beijinho",
@@ -37,7 +45,7 @@ public ProductMemoryRepository()
             Preco = 3.00f,
             Id_Categoria = 1
         });
-        
+
         Create(new Product
         {
             Nome = "Beijinho",
