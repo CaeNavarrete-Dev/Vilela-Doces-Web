@@ -10,7 +10,6 @@ builder.Services.AddSingleton<IProductRepository, ProductMemoryRepository>();
 //App
 var app = builder.Build();
 
-
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
