@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "History";
+}
+
+<nav class="navbar bg-light px-4">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <span class="navbar-brand mb-0 h4">Seus Pedidos</span>
+
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Filtrar
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#">Últimos pedidos</a></li>
+                <li><a class="dropdown-item" href="#">Em andamento</a></li>
+                <li><a class="dropdown-item" href="#">Concluídos</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="d-flex justify-content-center my-4">
+  <div class="card shadow-sm border-0" style="max-width: 700px; width: 100%;">
+    <div class="row g-0 align-items-center">
+      <div class="col-md-3">
+        <img src="~/lib/img_doceTeste.jpeg" class="img-fluid rounded-start p-2" alt="Produto">
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <p class="text-muted mb-1 small">
+           Pedido realizado em:(data da compra) 
+          </p>
+
+          <h6 class="card-title mb-2 fw-semibold">
+            Nome do Produto
+          </h6>
+
+          <p class="text-muted mb-2 small">Data e hora da entrega</p>
+
+          <div class="d-flex gap-2">
+            <a href="/Order/Cart" class="btn btn-primary btn-sm fw-semibold">Comprar novamente</a>
+            <a href="/Order/Details" class="btn btn-outline-secondary btn-sm">Ver o pedido</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
