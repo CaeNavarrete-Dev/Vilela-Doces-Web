@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using VLDocesWeb.Models;
 using VLDocesWeb.Repositories;
 
@@ -49,9 +50,18 @@ public class AccountController : Controller
     [HttpPost]
     public ActionResult Register(Customer customer)
     {
-        Console.WriteLine($"DEBUG => Nome: {customer.Nome}, Email: {customer.Email}, CPF: {customer.CPF}");
-        repository.Register(customer);
-        return RedirectToAction("Login");
+        try
+        {
+            repository.Register(customer);
+            return RedirectToAction("Login");
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine(ex.Message);
+            ViewBag.ErrorMessage = ex.Message;
+            return View(customer);
+        }
+        
     }
 
     [HttpGet]

@@ -2,10 +2,11 @@ namespace VLDocesWeb.Models;
 
 public abstract class User
 {
-    public int Id { get; set; }              // Identificador do usuário
-    public string Nome { get; set; }         // Nome completo
-    public string Email { get; set; }        // Email de login
-    public string Senha { get; set; }        // Senha de acesso
-    public string Telefone { get; set; }     // Telefone de contato
+    public int Id { get; set; }
+    public string Nome { get; set; } 
+    public string Email { get; set; }
+    public string Senha { get; set; }
+    public string Telefone { get; set; }
+    public int Tipo_Usuario { get; set; }
     
 }

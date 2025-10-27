@@ -4,7 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
-builder.Services.AddSingleton<ICustomerRepository, CustomerMemoryRepository>();
+builder.Services.AddTransient<ICustomerRepository>(_ => 
+    new CustomerDatabaseRepository(
+        builder.Configuration.GetConnectionString("default")));
 builder.Services.AddSingleton<IProductRepository, ProductMemoryRepository>();
 
 //App
