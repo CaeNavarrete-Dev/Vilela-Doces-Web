@@ -3,6 +3,12 @@
     Layout = "_Layout";
     ViewData["Title"] = "Register";
 }
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
 
 <div class="card card-style w-50 mx-auto p-4">
     <h1>Crie uma conta</h1>
