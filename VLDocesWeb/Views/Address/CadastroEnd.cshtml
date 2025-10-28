@@ -7,15 +7,15 @@
     <div class="cadastro-card shadow-sm">
         <h3 class="titulo">Cadastro de Endereço</h3>
 
-        <form method="post" asp-action="SalvarEndereco">
+        <form action="/Address/CadastroEnd" method="POST">
             <div class="form-group">
-                <label for="nome">Nome Completo</label>
+                <label for="nome">Nome do Endereço</label>
                 <input type="text" class="form-control" id="nome" name="Nome" required>
             </div>
 
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <input type="text" class="form-control" id="cep" name="CEP" required>
+                <input type="text" class="form-control" id="cep" name="Cep" required>
             </div>
 
             <div class="form-group">
@@ -45,12 +45,12 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="uf">UF</label>
-                    <input type="text" class="form-control" id="uf" name="UF" required>
+                    <input type="text" class="form-control" id="uf" name="Uf" required>
                 </div>
             </div>
 
             <div class="footer mt-4 d-flex justify-content-between">
-                <a href="/" class="btn btn-cancelar">Cancelar</a>
+                <a href="/Address/Index" class="btn btn-cancelar">Cancelar</a>
                 <button type="submit" class="btn btn-finalizar">Cadastrar</button>
             </div>
         </form>

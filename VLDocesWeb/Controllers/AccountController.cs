@@ -35,6 +35,7 @@ public class AccountController : Controller
             ViewBag.Message = "Usuario ou senha invalidos";
             return View(model);
         }
+        HttpContext.Session.SetInt32("UserId", login.Id);
         HttpContext.Session.SetString("UserName", login.Nome);
         HttpContext.Session.SetString("UserEmail", login.Email);
         HttpContext.Session.SetString("UserCPF", login.CPF);
@@ -62,11 +63,5 @@ public class AccountController : Controller
             return View(customer);
         }
         
-    }
-
-    [HttpGet]
-    public ActionResult CadastroEnd()
-    {
-        return View();
     }
 }

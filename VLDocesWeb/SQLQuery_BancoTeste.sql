@@ -4,8 +4,7 @@ go
 use VLDocesWebTeste
 go
 
-
---Criação Tabelas--
+--Criaï¿½ï¿½o Tabelas--
 
 --/Pesssoas/--
 create table Pessoas
@@ -19,6 +18,9 @@ create table Pessoas
 )
 go
 
+select * from Pessoas
+go
+
 --/Clientes/--
 create table Clientes
 (
@@ -28,7 +30,26 @@ create table Clientes
 go
 
 --/Enderecos/--
+create table Enderecos
+(
+	id_endereco int not null primary key identity,
+	nome varchar(100),
+	rua varchar(100),
+	numero varchar(10),
+	bairro varchar(50),
+	cep varchar(9) not null,
+	complemento varchar(50),
+	cidade varchar(100),
+	uf varchar(100),
+	-- chave estrangeira
+	id_cliente int not null references Clientes (id_pessoa)
+)
+go
 
+select * from Enderecos
+go
+
+drop table Enderecos
 
 --/Colaboradores--
 create table Colaboradores

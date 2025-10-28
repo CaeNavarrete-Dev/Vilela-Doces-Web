@@ -12,12 +12,12 @@ begin
 	begin TRY
 	if exists (select 1 from Pessoas where email = @email)
 		begin
-			raiserror('Email informado j· est· cadastrado', 16,1)
+			raiserror('Email informado j√° est√° cadastrado', 16,1)
 			return;
 		end
 	if exists (select 1 from Clientes where CPF = @cpf)
 		begin
-			raiserror('CPF informado j· est· cadastrado', 16, 1)
+			raiserror('CPF informado j√° est√° cadastrado', 16, 1)
 			return;
 		end
 	begin transaction

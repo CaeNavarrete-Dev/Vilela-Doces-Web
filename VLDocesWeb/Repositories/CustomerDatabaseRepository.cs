@@ -23,6 +23,7 @@ public class CustomerDatabaseRepository : DBConnection, ICustomerRepository
         {
             return new Customer
             {
+                Id = (int)reader["id_pessoa"],
                 Email = (string)reader["email"],
                 Nome = (string)reader["nome"],
                 CPF = (string)reader["CPF"],
