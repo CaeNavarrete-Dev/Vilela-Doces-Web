@@ -1,10 +1,10 @@
------Criação do Banco-----
+-----Criaï¿½ï¿½o do Banco-----
 create database db_Vilela_Doces
 
 use db_Vilela_Doces
 go
 
------Criação das Tabelas-----
+-----Criaï¿½ï¿½o das Tabelas-----
 
 -----//Pessoas//
 create table Pessoas
@@ -25,7 +25,7 @@ create table Clientes
 )
 go
 
-----//Endereços//
+----//Endereï¿½os//
 create table Enderecos
 (
 	id_endereco int not null primary key identity,
@@ -58,7 +58,7 @@ create table Pedidos
 	id_cliente int not null references Clientes (id_pessoa),
 	id_colaborador int not null references Colaboradores (id_pessoa)
 	-- Status:
-	-- 0.Em análise 
+	-- 0.Em anï¿½lise 
 	-- 1.Confirmado 
 	-- 2.Cancelado 
 	-- 3.Pronto p/ retirada 
@@ -82,8 +82,8 @@ create table Pagamentos
 -- Forma Pag
 -- 0.Dinheiro
 -- 1.Pix
--- 2.Cartão Crédito
--- 3.Cartão Débito
+-- 2.Cartï¿½o Crï¿½dito
+-- 3.Cartï¿½o Dï¿½bito
 -- Status
 -- 0. Pago
 -- 2. Cancelado
@@ -104,7 +104,7 @@ create table Entregas
 	id_cliente int not null references Clientes (id_pessoa)
 -- Status
 -- 0. Concluido
--- 1. Não concluido
+-- 1. Nï¿½o concluido
 )
 go
 
@@ -113,7 +113,10 @@ create table Categorias
 (
 	id_categoria int not null primary key identity,
 	nome varchar(50),
-	descricao varchar(100) 
+	descricao varchar(100)
+	-- Categoria
+	-- 0. Encomenda
+	-- 1. Entrega
 )
 go
 

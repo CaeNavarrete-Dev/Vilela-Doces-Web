@@ -40,3 +40,32 @@ go
 --Colaborador Teste--
 insert into Pessoas (nome,telefone,email,senha,tipo_pessoa) values ('adm','17988145012','adm@gmail','123',0)
 insert into Colaboradores values (3,'Adm teste')
+
+
+
+--Categorias--
+create table Categorias
+(
+	id_categoria int not null primary key identity,
+	nome varchar(50)
+	-- Categoria
+	-- 1. Entrega
+	-- 2. Pronta Entrega
+)
+go
+--Caegorias--
+insert into Categorias (nome) values ('Pronta Entrega')
+insert into Categorias (nome) values ('Encomenda')
+
+--Produtos--
+create table Produtos
+(
+	id_produto int not null primary key identity,
+	nome_produto varchar(50) not null,
+	preco money not null,
+	descricao varchar(100)	not	null,
+	-- chave estrangeira
+	id_categoria int not null references Categorias (id_categoria)
+)
+go
+
