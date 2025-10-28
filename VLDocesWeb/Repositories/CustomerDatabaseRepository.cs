@@ -9,11 +9,11 @@ public class CustomerDatabaseRepository : DBConnection, ICustomerRepository
     {
         
     }
-    public Customer Login(LoginViewModel model)
+    public User Login(LoginViewModel model)
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "select p.id_pessoa, p.nome, p.telefone, p.email, c.CPF from Pessoas p, Clientes c where p.email = @email and p.senha = @senha";
+        cmd.CommandText = "select p.id_pessoa, p.nome, p.telefone, p.email, p.tipo_pessoa, c.CPF from Pessoas p LEFT JOIN Clientes c on p.id_pessoa = c.id_pessoa where p.email = @email and p.senha = @senha";
         cmd.Parameters.AddWithValue("email", model.Email);
         cmd.Parameters.AddWithValue("senha", model.Senha);
 
@@ -21,13 +21,27 @@ public class CustomerDatabaseRepository : DBConnection, ICustomerRepository
 
         if (reader.Read())
         {
-            return new Customer
+            var tipo_pessoa = (int)reader["tipo_pessoa"];
+
+            if (tipo_pessoa == 1)
             {
-                Email = (string)reader["email"],
-                Nome = (string)reader["nome"],
-                CPF = (string)reader["CPF"],
-                Telefone = (string)reader["telefone"]
-            };
+                return new Customer
+                {
+                    Email = (string)reader["email"],
+                    Nome = (string)reader["nome"],
+                    CPF = (string)reader["CPF"],
+                    Telefone = (string)reader["telefone"]
+                };
+            }
+            else
+            {
+                return new Collaborator
+                {
+                    Email = (string)reader["email"],
+                    Nome = (string)reader["nome"],
+                    Telefone = (string)reader["telefone"]
+                };
+            }
         }
         return null;
     }

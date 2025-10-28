@@ -37,3 +37,6 @@ create table Colaboradores
 	observacao		varchar(100)
 )
 go
+--Colaborador Teste--
+insert into Pessoas (nome,telefone,email,senha,tipo_pessoa) values ('adm','17988145012','adm@gmail','123',0)
+insert into Colaboradores values (3,'Adm teste')

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VLDocesWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05d5f736cd26cc12404ca0be1ded5a2e5b0a32c0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0eae57c2744806d6c36ccd1e502e85abe7705963")]
 [assembly: System.Reflection.AssemblyProductAttribute("VLDocesWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VLDocesWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
