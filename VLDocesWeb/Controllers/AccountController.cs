@@ -37,7 +37,7 @@ public class AccountController : Controller
         }
         else if (login is Customer customer)
         {
-            HttpContext.Session.SetString("UderId", customer.Id);
+            HttpContext.Session.SetInt32("UderId", customer.Id);
             HttpContext.Session.SetString("UserName", customer.Nome);
             HttpContext.Session.SetString("UserEmail", customer.Email);
             HttpContext.Session.SetString("UserCPF", customer.CPF);
