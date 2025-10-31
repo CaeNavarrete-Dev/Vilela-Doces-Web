@@ -27,27 +27,17 @@
                         <p class="mb-0 text-muted">@endereco.Bairro - @endereco.Cidade/@endereco.Uf - CEP: @endereco.Cep</p>
                         <small class="text-success">Estimativa de entrega: 45-60 minutos</small>
                     </label>
+                    <a href="/Address/Update?endId=@endereco.AddressId">Editar</a>
+                    <a href="/Address/Delete?endId=@endereco.AddressId">Excluir</a>
                 </div>
             }
 
-
-            <div class="form-check p-3 mb-3 border-bottom radio-option">
-                <input class="form-check-input" type="radio" name="enderecoOpcao" id="endereco2" value="2">
-                <label class="form-check-label ms-2 d-block" for="endereco2">
-                    <strong class="text-dark">Endereço do Trabalho (R$5,00)</strong>
-                    <p class="mb-0">Av. Exemplo, 789, Sala 505</p>
-                    <p class="mb-0 text-muted">Bairro Empresarial - Cidade/UF - CEP: 00000-000</p>
-                    <small class="text-success">Estimativa de entrega: 60-75 minutos</small>
-                </label>
-            </div>
-
             <div class="p-3">
-                <a href="/Address/CadastroEnd" 
+                <a href="/Address/Create" 
                  class="btn text-white w-100" style="background-color:#6a4130;">
                     <i class="fas fa-plus-circle me-2"></i> Adicionar novo endereço
                 </a>
             </div>
-
         </div>
     </div>
 
@@ -55,7 +45,6 @@
         <div class="card p-4 shadow-lg sticky-top resumo-card">
             <h4 class="card-title">Resumo do Pedido</h4>
             <hr>
-
             <div class="d-flex justify-content-between text-muted small">
                 <span>Itens (3)</span>
                 <span>R$ 47,00</span>

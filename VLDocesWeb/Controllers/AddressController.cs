@@ -22,18 +22,41 @@ public class AddressController : Controller
     }
 
     [HttpGet]
-    public ActionResult CadastroEnd()
+    public ActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
-    public ActionResult CadastroEnd(Address model)
+    public ActionResult Create(Address model)
     {
         var usuarioId = (int)HttpContext.Session.GetInt32("UserId");
         model.ClienteId = usuarioId;
 
         repository.Create(model);
+        return RedirectToAction("Index");
+    }
+
+    public ActionResult Delete(int endId)
+    {
+        repository.Delete(endId);
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public ActionResult Update(int endId)
+    {
+        var Address = repository.Read(endId);
+        return View(Address);
+    }
+
+    [HttpPost]
+    public ActionResult Update(int id, Address model)
+    {
+        model.AddressId = id;
+        // model.ClienteId = (int)HttpContext.Session.GetInt32("UserId");
+        repository.Update(model);
+
         return RedirectToAction("Index");
     }
 }

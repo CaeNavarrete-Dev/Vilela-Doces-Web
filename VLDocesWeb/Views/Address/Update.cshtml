@@ -1,0 +1,59 @@
+@model VLDocesWeb.Models.Address
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Cadastro de Endereço";
+}
+
+<div class="cadastro-container">
+    <div class="cadastro-card shadow-sm">
+        <h3 class="titulo">Cadastro de Endereço</h3>
+
+        <form action="/Address/Update?id=@Model.AddressId" method="POST">
+            <div class="form-group">
+                <label for="nome">Nome do Endereço</label>
+                <input type="text" class="form-control" id="nome" name="Nome" value="@Model.Nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" class="form-control" id="cep" name="Cep" value="@Model.Cep" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rua">Rua</label>
+                <input type="text" class="form-control" id="rua" name="Rua" value="@Model.Rua" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label for="numero">Número</label>
+                    <input type="text" class="form-control" id="numero" name="Numero" value="@Model.Numero" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="Bairro" value="@Model.Bairro" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="complemento">Complemento</label>
+                    <input type="text" class="form-control" id="complemento" name="Complemento" value="@Model.Complemento">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="cidade">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" name="Cidade" value="@Model.Cidade" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="uf">UF</label>
+                    <input type="text" class="form-control" id="uf" name="Uf" value="@Model.Uf" required>
+                </div>
+            </div>
+
+            <div class="footer mt-4 d-flex justify-content-between">
+                <a href="/Address/Index" class="btn btn-cancelar">Cancelar</a>
+                <button type="submit" class="btn btn-finalizar">Cadastrar</button>
+            </div>
+        </form>
+    </div>
+</div>
