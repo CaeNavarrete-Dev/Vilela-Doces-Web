@@ -1,6 +1,5 @@
-use VLDocesWebTeste
+use db_Vilela_Doces
 go
-
 
 --Procedures--
 
@@ -33,5 +32,3 @@ begin
 	end catch
 end
 go
-
-
