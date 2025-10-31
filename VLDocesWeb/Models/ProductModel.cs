@@ -6,5 +6,7 @@ public class Product
     public string Nome { set; get; }
     public string Descricao { set; get; }
     public float Preco { set; get; }
-    public int Id_Categoria{ set; get; }
+    public int Id_Categoria { set; get; }
+    
+    //public string URL_Img { set; get; }
 }

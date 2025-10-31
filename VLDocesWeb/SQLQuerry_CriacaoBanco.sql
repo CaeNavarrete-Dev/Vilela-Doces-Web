@@ -113,7 +113,10 @@ create table Categorias
 (
 	id_categoria int not null primary key identity,
 	nome varchar(50),
-	descricao varchar(100) 
+	descricao varchar(100)
+	-- Categoria
+	-- 0. Encomenda
+	-- 1. Entrega
 )
 go
 

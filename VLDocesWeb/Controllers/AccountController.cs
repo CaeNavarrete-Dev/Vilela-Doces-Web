@@ -35,12 +35,25 @@ public class AccountController : Controller
             ViewBag.Message = "Usuario ou senha invalidos";
             return View(model);
         }
-        HttpContext.Session.SetInt32("UserId", login.Id);
-        HttpContext.Session.SetString("UserName", login.Nome);
-        HttpContext.Session.SetString("UserEmail", login.Email);
-        HttpContext.Session.SetString("UserCPF", login.CPF);
-        HttpContext.Session.SetString("UserTelefone", login.Telefone);
-        return RedirectToAction("Index","Initial");
+        else if (login is Customer customer)
+        {
+            HttpContext.Session.SetString("UderId", customer.Id);
+            HttpContext.Session.SetString("UserName", customer.Nome);
+            HttpContext.Session.SetString("UserEmail", customer.Email);
+            HttpContext.Session.SetString("UserCPF", customer.CPF);
+            HttpContext.Session.SetString("UserTelefone", customer.Telefone);
+            HttpContext.Session.SetString("UserType", "Customer");
+            return RedirectToAction("Index", "Initial");
+        }
+        else
+        {
+            HttpContext.Session.SetInt32("UserId", login.Id);
+            HttpContext.Session.SetString("UserName", login.Nome);
+            HttpContext.Session.SetString("UserEmail", login.Email);
+            HttpContext.Session.SetString("UserTelefone", login.Telefone);
+            HttpContext.Session.SetString("UserType", "Collaborator");
+            return RedirectToAction("Index", "InitialCo");
+        }   
     }
 
     [HttpGet]

@@ -10,7 +10,12 @@ builder.Services.AddTransient<ICustomerRepository>(_ =>
 builder.Services.AddTransient<IAddressRepository>(_ => 
     new AddressDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
-builder.Services.AddSingleton<IProductRepository, ProductMemoryRepository>();
+builder.Services.AddTransient<IProductRepository>(_ =>
+    new ProductDatabaseRepository(
+        builder.Configuration.GetConnectionString("default")));
+builder.Services.AddTransient<IProdCategorieRepository>(_ =>
+    new ProdCategorieDatabaseRepository(
+        builder.Configuration.GetConnectionString("Default")));
 
 //App
 var app = builder.Build();

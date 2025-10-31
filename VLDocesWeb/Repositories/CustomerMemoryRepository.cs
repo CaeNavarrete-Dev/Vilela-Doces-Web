@@ -5,7 +5,7 @@ namespace VLDocesWeb.Repositories;
 public class CustomerMemoryRepository : ICustomerRepository
 {
     public static List<Customer> _customers = new List<Customer>();
-    public Customer Login(LoginViewModel model)
+    public User Login(LoginViewModel model)
     {
         foreach (Customer c in _customers)
         {

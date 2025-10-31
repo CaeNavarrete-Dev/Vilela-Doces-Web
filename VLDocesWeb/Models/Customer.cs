@@ -2,5 +2,5 @@ namespace VLDocesWeb.Models;
 
 public class Customer : User
 {
-    public string CPF { set; get; } //CPF do Cliente
+    public string CPF { set; get; }
 }
