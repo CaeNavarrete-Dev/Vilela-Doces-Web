@@ -153,3 +153,14 @@ create table Itens_Pedidos
 	primary key (id_pedido, id_produto)
 )
 go
+
+select * from Categorias
+select * from Clientes
+select * from Colaboradores
+select * from Enderecos
+select * from Entregas
+select * from Itens_Pedidos
+select * from Pagamentos
+select * from Pedidos
+select * from Pessoas
+select * from Produtos
