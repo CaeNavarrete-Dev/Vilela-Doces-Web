@@ -43,6 +43,7 @@ insert into Colaboradores values (1,'Adm teste')
 create table Enderecos
 (
 	id_endereco int not null primary key identity,
+	nome varchar(100),
 	rua varchar(100),
 	numero varchar(10),
 	bairro varchar(50),
@@ -118,7 +119,8 @@ create table Pagamentos
 -- 0.Dinheiro
 -- 1.Pix
 -- Status
--- 0. Pago
+-- 0. Pendente
+-- 1. Pago
 -- 2. Cancelado
 -- 3. Estornado
 )

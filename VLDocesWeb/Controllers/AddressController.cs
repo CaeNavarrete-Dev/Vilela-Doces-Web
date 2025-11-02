@@ -54,7 +54,7 @@ public class AddressController : Controller
     public ActionResult Update(int id, Address model)
     {
         model.AddressId = id;
-        // model.ClienteId = (int)HttpContext.Session.GetInt32("UserId");
+        model.ClienteId = (int)HttpContext.Session.GetInt32("UserId");
         repository.Update(model);
 
         return RedirectToAction("Index");
