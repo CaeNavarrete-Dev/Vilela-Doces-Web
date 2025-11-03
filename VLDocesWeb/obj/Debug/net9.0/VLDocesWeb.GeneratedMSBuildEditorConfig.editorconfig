@@ -20,16 +20,24 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Account/CadastroEnd.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDYWRhc3Ryb0VuZC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Address/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRkcmVzc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Address/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRkcmVzc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Address/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRkcmVzc1xVcGRhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Home/Index.cshtml]
@@ -42,10 +50,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Initial/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5pdGlhbFxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Order/Address.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcQWRkcmVzcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Dev/PorjetoDezani/Vilela-Doces-Web/VLDocesWeb/Views/Order/Cart.cshtml]

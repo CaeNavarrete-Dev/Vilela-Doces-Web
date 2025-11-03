@@ -1,7 +1,6 @@
 using VLDocesWeb.Repositories;
 using VLDocesWeb.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 
 namespace VLDocesWeb.Controllers;
 
