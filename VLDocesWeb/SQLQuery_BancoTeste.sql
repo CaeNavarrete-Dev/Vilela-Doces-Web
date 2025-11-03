@@ -5,7 +5,7 @@ use VLDocesWebTeste
 go
 
 
---Criação Tabelas--
+--Criaï¿½ï¿½o Tabelas--
 
 --/Pesssoas/--
 create table Pessoas
@@ -39,7 +39,7 @@ create table Colaboradores
 go
 --Colaborador Teste--
 insert into Pessoas (nome,telefone,email,senha,tipo_pessoa) values ('adm','17988145012','adm@gmail','123',0)
-insert into Colaboradores values (3,'Adm teste')
+insert into Colaboradores values (1,'Adm teste')
 
 
 
@@ -50,7 +50,7 @@ create table Categorias
 	nome varchar(50)
 	-- Categoria
 	-- 1. Entrega
-	-- 2. Pronta Entrega
+	-- 2. Encomenda
 )
 go
 --Caegorias--

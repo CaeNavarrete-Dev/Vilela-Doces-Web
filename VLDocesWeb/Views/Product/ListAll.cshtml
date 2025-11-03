@@ -1,0 +1,72 @@
+@model List<VLDocesWeb.Models.Product>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Listagem de Produtos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>
+        Lista de Produtos
+        <span class="badge bg-secondary ms-2">@Model.Count</span>
+    </h1>
+    
+    <a class="btn btn-primary" href="/Product/Create">
+        <i class="fa-solid fa-plus"></i> Adicionar Novo
+    </a>
+</div>
+
+<table class="table table-hover align-middle">
+    
+    <thead class="table-light">
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Preço</th>
+            <th scope="col">Categoria</th>
+            <th scope="col" style="width: 150px;">Ações</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        @foreach(var product in Model) 
+        {
+            <tr>
+                <td>@product.Nome</td>
+                
+                <td>R$ @product.Preco.ToString("F2")</td>
+                
+                <td>
+                    @if(product.Id_Categoria == 1)
+                    {
+                        <span>Pronta Entrega</span>
+                    }
+                    else if(product.Id_Categoria == 2)
+                    {
+                        <span>Encomenda</span>
+                    }
+                </td>
+                
+                <td>
+                    <div class="d-flex gap-2">
+                        <a href="/Product/Update/@product.Id_Produto" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <form action="/Product/Delete/@product.Id_Produto" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info text-center">
+        Nenhum produto cadastrado ainda. 
+        <a href="/Product/Create" class="alert-link">Clique aqui</a> para adicionar o primeiro!
+    </div>
+}

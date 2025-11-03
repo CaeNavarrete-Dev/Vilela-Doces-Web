@@ -11,7 +11,7 @@ public class OrderController : Controller
     }
     public ActionResult Index()
     {
-        var _products = repository.ListAll();
+        var _products = repository.ListAllOrder();
         return View(_products);
     }
 

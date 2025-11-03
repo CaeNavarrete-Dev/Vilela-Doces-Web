@@ -1,5 +1,7 @@
 //Builder
 using VLDocesWeb.Repositories;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -17,10 +19,23 @@ builder.Services.AddTransient<IProdCategorieRepository>(_ =>
 //App
 var app = builder.Build();
 
+var supportedCultures = new[] { new CultureInfo("en-US") };
+var localizationOptions = new RequestLocalizationOptions
+{
+    // Define a cultura padrão para todas as requisições
+    DefaultRequestCulture = new RequestCulture("en-US"),
+
+    // Lista de culturas que a aplicação suporta
+    SupportedCultures = supportedCultures,
+
+    // Lista de culturas para UI (tradução de mensagens, etc.)
+    SupportedUICultures = supportedCultures
+};
+app.UseRequestLocalization(localizationOptions);
 
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
-app.MapControllerRoute("defaut", "{controller=Home}/{action=Index}");
+app.MapControllerRoute("defaut", "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

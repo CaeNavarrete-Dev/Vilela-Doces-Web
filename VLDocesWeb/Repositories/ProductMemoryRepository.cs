@@ -17,8 +17,33 @@ public class ProductMemoryRepository : IProductRepository
     {
         return _products;
     }
-    
-public ProductMemoryRepository()
+
+    public List<Product> ListAllOrder()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Product> ListAllPackage()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Product Read(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(Product model)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ProductMemoryRepository()
     {
      if (_products.Count == 0)
      {
