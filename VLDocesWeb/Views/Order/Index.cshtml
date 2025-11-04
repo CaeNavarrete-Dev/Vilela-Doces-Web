@@ -4,6 +4,7 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Order";
+
 }
 <div class="container d-flex justify-content-between">
     <a href="~/Initial/Index" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button"><i class="bi bi-arrow-left"></i></a>
@@ -28,8 +29,9 @@
                         <form action="/Order/AddToCart/@product.Id_Produto" method="POST">
                             <button type="submit" class="amount_button">+</button>
                         </form>
-                        <div class="fw-bold">1</div>
-                        <button class="amount_button">-</button>
+                        <form action="/Order/RemoveToCart/@product.Id_Produto" method="POST">
+                            <button type="subimt" class="amount_button">-</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace VLDocesWeb.Controllers;
 using System.Text.Json;
 using System.Collections.Generic;
 using VLDocesWeb.Models;
+using Microsoft.VisualBasic;
 
 public class OrderController : Controller
 {
@@ -66,6 +67,30 @@ public class OrderController : Controller
         string cartJson = JsonSerializer.Serialize(cart);
 
         HttpContext.Session.SetString("Cart", cartJson);
+    }
+    [HttpPost]
+    public ActionResult RemoveToCart (int id)
+    {
+        var cart = GetCartFromSession();
+        CartItem existeItem = null;
+
+        foreach (CartItem item in cart)
+        {
+            if (item.Produto.Id_Produto == id)
+            {
+                existeItem = item;
+            }
+        }
+        if (existeItem != null)
+        {
+            existeItem.Quantidade -= 1;
+            if (existeItem.Quantidade == 0)
+            {
+                cart.Remove(existeItem);
+            }
+        }
+        SaveCartSession(cart);
+        return RedirectToAction("Index");
     }
 
     [HttpGet]

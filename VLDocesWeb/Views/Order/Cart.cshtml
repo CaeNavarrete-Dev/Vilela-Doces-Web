@@ -39,7 +39,9 @@
                         <td>@item.Quantidade</td>
                         <td>R$ @((item.Produto.Preco * item.Quantidade).ToString("F2"))</td>
                         <td>
-                            <a href="#" class="btn btn-danger btn-sm">Remover</a>
+                            <form action="/Order/RemoveToCart/@item.Produto.Id_Produto" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                            </form>
                         </td>
                     </tr>
                 }
