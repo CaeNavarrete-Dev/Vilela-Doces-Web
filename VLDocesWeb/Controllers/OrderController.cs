@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using VLDocesWeb.Repositories;
 namespace VLDocesWeb.Controllers;
+using System.Text.Json;
+using System.Collections.Generic;
+using VLDocesWeb.Models;
 
 public class OrderController : Controller
 {
@@ -15,9 +18,61 @@ public class OrderController : Controller
         return View(_products);
     }
 
+    [HttpPost]
+    public ActionResult AddToCart(int id)
+    {
+        List<CartItem> cart = GetCartFromSession();
+        CartItem existeItem = null;
+        foreach (CartItem item in cart)
+        {
+            if (item.Produto.Id_Produto == id)
+            {
+                existeItem = item;
+                break;
+            }
+        }
+        if (existeItem != null)
+        {
+            existeItem.Quantidade += 1;
+        }
+        else
+        {
+            Product produto = repository.Read(id);
+            if (produto != null)
+            {
+                cart.Add(new CartItem
+                {
+                    Produto = produto,
+                    Quantidade = 1
+                });
+            }
+        }
+        SaveCartSession(cart);
+        return RedirectToAction("Index");
+    }
+    private List<CartItem> GetCartFromSession()
+    {
+        string cartJson = HttpContext.Session.GetString("Cart");
+
+        if (string.IsNullOrEmpty(cartJson))
+        {
+            return new List<CartItem>();
+        }
+
+        return JsonSerializer.Deserialize<List<CartItem>>(cartJson); //Traduz a string para uma lista
+    }
+    private void SaveCartSession(List<CartItem> cart)
+    {
+        string cartJson = JsonSerializer.Serialize(cart);
+
+        HttpContext.Session.SetString("Cart", cartJson);
+    }
+
+    [HttpGet]
     public ActionResult Cart()
     {
-        return View("Cart");
+        List<CartItem> cart = GetCartFromSession();
+        return View("Cart", cart);
     }
 
     public ActionResult Payment()
