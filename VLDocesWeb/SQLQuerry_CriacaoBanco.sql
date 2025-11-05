@@ -52,9 +52,19 @@ create table Enderecos
 	cidade varchar(100),
 	uf varchar(100),
 	-- chave estrangeira
-	id_cliente int not null references Clientes (id_pessoa)
+	id_cliente int null references Clientes (id_pessoa)
 )
 go
+
+---- Endereço da Loja ----
+insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf) 
+values('Loja oficial', 'Rua dos Bobos', 'nº0', 'Jd. dos Bobos', '12345123', 'Potirendaba', 'SP')
+go
+insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf, id_cliente) 
+values('Casa', 'São Carlos', '360', 'Jd. Europa', '15014480', 'São José do Rio Preto', 'SP', 2)
+GO
+
+drop TABLE Enderecos
 
 ----//Categorias//
 create table Categorias
@@ -135,8 +145,8 @@ create table Entregas
 	status int not null, check(status between 0 and 1), 
 	observacao varchar(500),
 	-- chave estrangeira
-	id_pedidos int not null references Pedidos (id_pedido),
-	id_cliente int not null references Clientes (id_pessoa)
+	id_pedido int not null references Pedidos (id_pedido),
+	id_endereco int not null references Enderecos (id_endereco)
 -- Status
 -- 0. Concluído
 -- 1. Não concluído
@@ -160,9 +170,9 @@ select * from Categorias
 select * from Clientes
 select * from Colaboradores
 select * from Enderecos
+select * from Pessoas
 select * from Entregas
 select * from Itens_Pedidos
 select * from Pagamentos
 select * from Pedidos
-select * from Pessoas
 select * from Produtos

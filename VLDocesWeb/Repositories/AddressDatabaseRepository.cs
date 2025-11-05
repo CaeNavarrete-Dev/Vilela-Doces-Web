@@ -39,7 +39,7 @@ public class AddressDatabaseRepository : DBConnection, IAddressRepository {
 
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "SELECT id_endereco, nome, rua, numero, bairro, cep, complemento, cidade, uf FROM Enderecos WHERE id_cliente = @usuarioId";
+        cmd.CommandText = "SELECT * FROM Enderecos WHERE id_cliente = @usuarioId OR id_cliente is null";
 
         cmd.Parameters.AddWithValue("usuarioId", usuarioId);
 
@@ -48,10 +48,17 @@ public class AddressDatabaseRepository : DBConnection, IAddressRepository {
         while (reader.Read())
         {
             string complemento;
-            if (reader.IsDBNull(reader.GetOrdinal("complemento"))) {
+            if(reader.IsDBNull(reader.GetOrdinal("complemento"))) {
                 complemento = null;
             } else {
                 complemento = (string)reader["complemento"];
+            }
+
+            int clienteId;
+            if(reader.IsDBNull(reader.GetOrdinal("id_cliente"))) {
+                clienteId = 0;
+            } else {
+                clienteId = (int)reader["id_cliente"];
             }
 
             lista.Add(new Address
@@ -64,7 +71,8 @@ public class AddressDatabaseRepository : DBConnection, IAddressRepository {
                 Cep = (string)reader["cep"],
                 Complemento = complemento,
                 Cidade = (string)reader["cidade"],
-                Uf = (string)reader["uf"]
+                Uf = (string)reader["uf"],
+                ClienteId = clienteId
             });
         }
 

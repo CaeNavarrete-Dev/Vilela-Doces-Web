@@ -14,6 +14,13 @@ public class AddressController : Controller
     {
         this.repository = repository;
     }
+
+    [HttpPost]
+    public ActionResult AddToSession(int endId) 
+    {
+        HttpContext.Session.SetInt32("AddressId", endId);
+        return RedirectToAction("Payment", "Order");
+    }
     
     public ActionResult Index()
     {

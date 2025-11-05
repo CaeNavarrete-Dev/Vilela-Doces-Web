@@ -44,6 +44,7 @@ public class OrderController : Controller
                 cart.Add(new CartItem
                 {
                     Produto = produto,
+                    PrecoVendido = produto.Preco,
                     Quantidade = 1
                 });
             }
@@ -113,5 +114,32 @@ public class OrderController : Controller
     public ActionResult History()
     {
         return View("History");
+    }
+
+    [HttpGet]
+    public IActionResult CalcularFreteETotal(int enderecoId)
+    {
+        List<CartItem> cartItems = GetCartFromSession();
+
+        float subtotal = cartItems.Sum(item => item.PrecoVendido * item.Quantidade);
+        
+        float frete;
+        if (enderecoId == 1)
+        {
+            frete = 0.00F;
+        }
+        else
+        {
+            frete = 5.00F; 
+        }
+    
+        float totalGeral = subtotal + frete;
+
+        return Json(new { 
+            subtotalFormatado = subtotal.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
+            frete = frete.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
+            totalGeral = totalGeral.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
+            freteDecimal = frete
+        });
     }
 }
