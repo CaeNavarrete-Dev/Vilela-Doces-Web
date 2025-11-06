@@ -38,7 +38,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
             {
                 Id_Produto = (int)reader["id_produto"],
                 Nome = (string)reader["nome_produto"],
-                Preco = (float)Convert.ToDouble(reader["preco"]),
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
                 Id_Categoria = (int)reader["id_categoria"],
                 Descricao = (string)reader["descricao"]
             };
@@ -61,7 +61,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
             {
                 Id_Produto = (int)reader["id_produto"],
                 Nome = (string)reader["nome_produto"],
-                Preco = (float)Convert.ToDouble(reader["preco"]),
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
                 Id_Categoria = (int)reader["id_categoria"],
                 Descricao = (string)reader["descricao"]
             };
@@ -84,7 +84,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
             {
                 Id_Produto = (int)reader["id_produto"],
                 Nome = (string)reader["nome_produto"],
-                Preco = (float)Convert.ToDouble(reader["preco"]),
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
                 Id_Categoria = (int)reader["id_categoria"],
                 Descricao = (string)reader["descricao"]
             };
@@ -117,7 +117,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
             {
                 Id_Produto = (int)reader["id_produto"],
                 Nome = (string)reader["nome_produto"],
-                Preco = (float)Convert.ToDouble(reader["preco"]),
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
                 Id_Categoria = (int)reader["id_categoria"],
                 Descricao = (string)reader["descricao"]
             };

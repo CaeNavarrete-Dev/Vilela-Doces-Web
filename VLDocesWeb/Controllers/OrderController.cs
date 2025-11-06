@@ -103,7 +103,9 @@ public class OrderController : Controller
 
     public ActionResult Payment()
     {
-        return View("Payment");
+        var summaryString = HttpContext.Session.GetString("PaymentSummary");
+        var summary = JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryString);
+        return View("Payment", summary);
     }
 
     public ActionResult Details()
@@ -121,9 +123,9 @@ public class OrderController : Controller
     {
         List<CartItem> cartItems = GetCartFromSession();
 
-        float subtotal = cartItems.Sum(item => item.PrecoVendido * item.Quantidade);
+        decimal subtotal = cartItems.Sum(item => item.PrecoVendido * item.Quantidade);
         
-        float frete;
+        decimal frete;
         if (enderecoId == 1)
         {
             frete = 0.00F;
@@ -132,14 +134,63 @@ public class OrderController : Controller
         {
             frete = 5.00F; 
         }
-    
-        float totalGeral = subtotal + frete;
+
+        decimal totalGeral = subtotal + frete;
+
+        var summary = new PaymentSummaryViewModel {
+            Subtotal = subtotal,
+            Frete = frete,
+            TotalGeral = totalGeral
+        };
+
+        string summaryJson = JsonSerializer.Serialize(summary);
+
+        HttpContext.Session.SetString("PaymentSummary", summaryJson);
 
         return Json(new { 
-            subtotalFormatado = subtotal.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
-            frete = frete.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
-            totalGeral = totalGeral.ToString("F2", new System.Globalization.CultureInfo("pt-BR")),
+            subtotalFormatado = subtotal.ToString("C2", new System.Globalization.CultureInfo("pt-BR")),
+            frete = frete.ToString("C2", new System.Globalization.CultureInfo("pt-BR")),
+            totalGeral = totalGeral.ToString("C2", new System.Globalization.CultureInfo("pt-BR")),
             freteDecimal = frete
         });
+    }
+
+    [HttpPost]
+    public IActionResult ProcessPayment(PaymentSubmissionViewModel model)
+    {
+        if (string.IsNullOrEmpty(model.FormaPagamento))
+        {
+            ModelState.AddModelError(string.Empty, "Por favor, selecione uma forma de pagamento.");
+            return View("Payment", GetPaymentSummary());
+        }
+
+        if (model.FormaPagamento == "0")
+        {
+            if (model.NaoPrecisoTroco)
+            {
+                model.ValorTroco = null; 
+            }
+            else if (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral)
+            {
+                ModelState.AddModelError("ValorTroco", "O valor de troco é obrigatório e precisa ser maior que o Total a Pagar.");
+                return View("Payment", GetPaymentSummary());
+            }
+        }
+        
+        PaymentSummaryViewModel summary = HttpContext.Session.GetObjectFromJson<PaymentSummaryViewModel>("PaymentSummary");
+        
+        // Função para a finalização do pedido
+        // ...
+        // Lógica para Salvar o Pedido no Banco de Dados
+        // ...
+
+        if (model.FormaPagamento == "1")
+        {
+            // return RedirectToAction("PixConfirmation"); 
+        }
+        else
+        {
+            return RedirectToAction("Details"); 
+        }
     }
 }

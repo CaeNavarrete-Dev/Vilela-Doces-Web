@@ -3,7 +3,7 @@
     Layout = "_Layout";
     ViewData["Title"] = "Meu Carrinho";
     
-    float total = 0;
+    decimal total = 0;
     foreach(var item in Model)
     {
         total += item.Produto.Preco * item.Quantidade;
@@ -35,9 +35,9 @@
                 {
                     <tr>
                         <td>@item.Produto.Nome</td>
-                        <td>R$ @item.Produto.Preco.ToString("F2")</td>
+                        <td>R$ @item.Produto.Preco.ToString("C2")</td>
                         <td>@item.Quantidade</td>
-                        <td>R$ @((item.Produto.Preco * item.Quantidade).ToString("F2"))</td>
+                        <td>R$ @((item.Produto.Preco * item.Quantidade).ToString("C2"))</td>
                         <td>
                             <form action="/Order/RemoveToCart/@item.Produto.Id_Produto" method="POST">
                                 <button type="submit" class="btn btn-danger btn-sm">Remover</button>
@@ -49,7 +49,7 @@
             <tfoot>
                 <tr>
                     <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                    <td colspan="2"><strong>R$ @total.ToString("F2")</strong></td>
+                    <td colspan="2"><strong>R$ @total.ToString("C2")</strong></td>
                 </tr>
             </tfoot>
         </table>
