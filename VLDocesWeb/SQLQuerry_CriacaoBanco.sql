@@ -1,5 +1,6 @@
 -----Criação do Banco-----
 create database db_Vilela_Doces
+go
 
 use db_Vilela_Doces
 go
