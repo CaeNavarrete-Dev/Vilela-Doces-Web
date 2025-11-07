@@ -9,9 +9,11 @@ using Microsoft.VisualBasic;
 public class OrderController : Controller
 {
     private IProductRepository repository;
-    public OrderController(IProductRepository repository)
+    private IOrderRepository _orderRepository;
+    public OrderController(IProductRepository repository, IOrderRepository orderRepository)
     {
         this.repository = repository;
+        this._orderRepository = orderRepository;
     }
     public ActionResult Index()
     {
@@ -128,11 +130,11 @@ public class OrderController : Controller
         decimal frete;
         if (enderecoId == 1)
         {
-            frete = 0.00F;
+            frete = 0;
         }
         else
         {
-            frete = 5.00F; 
+            frete = 5; 
         }
 
         decimal totalGeral = subtotal + frete;
@@ -158,39 +160,87 @@ public class OrderController : Controller
     [HttpPost]
     public IActionResult ProcessPayment(PaymentSubmissionViewModel model)
     {
-        if (string.IsNullOrEmpty(model.FormaPagamento))
-        {
-            ModelState.AddModelError(string.Empty, "Por favor, selecione uma forma de pagamento.");
-            return View("Payment", GetPaymentSummary());
-        }
-
-        if (model.FormaPagamento == "0")
+        // 1. ========= VALIDAÇÃO DO FORMULÁRIO (Seu código está ótimo) ==========
+        
+        // Validação de Troco (um pouco mais robusta)
+        if (model.FormaPagamento == "0") // 0 = Dinheiro
         {
             if (model.NaoPrecisoTroco)
             {
-                model.ValorTroco = null; 
+                model.ValorTroco = null; // Limpa o valor se a caixa estiver marcada
             }
-            else if (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral)
+            // Se "NaoPrecisoTroco" NÃO está marcada E o valor é inválido...
+            else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
             {
-                ModelState.AddModelError("ValorTroco", "O valor de troco é obrigatório e precisa ser maior que o Total a Pagar.");
-                return View("Payment", GetPaymentSummary());
+                ModelState.AddModelError("ValorTroco", "Para troco, o valor deve ser maior que o Total a Pagar.");
             }
         }
         
-        PaymentSummaryViewModel summary = HttpContext.Session.GetObjectFromJson<PaymentSummaryViewModel>("PaymentSummary");
-        
-        // Função para a finalização do pedido
-        // ...
-        // Lógica para Salvar o Pedido no Banco de Dados
-        // ...
-
-        if (model.FormaPagamento == "1")
+        // Se o modelo geral for inválido (incluindo o erro de troco acima)
+        if (!ModelState.IsValid)
         {
-            // return RedirectToAction("PixConfirmation"); 
+            // Retorna para a view de Pagamento, enviando o resumo de volta
+            return View("Payment", GetPaymentSummary());
+        }
+
+        // 2. ========= COLETA DE DADOS DA SESSÃO ==========
+        
+        var cart = GetCartFromSession();
+        var summary = GetPaymentSummary();
+
+        // Baseado no seu AddressController e no login:
+        var customerId = HttpContext.Session.GetInt32("UserId"); 
+        var enderecoId = HttpContext.Session.GetInt32("AddressId");
+
+        // 3. ========= VERIFICAÇÃO DE SEGURANÇA ==========
+        // Se a sessão expirou ou o carrinho está vazio
+        if (customerId == null || enderecoId == null || !cart.Any())
+        {
+            // Se faltar dados vitais, mande o usuário de volta para o início.
+            return RedirectToAction("Cart");
+        }
+
+        // 4. ========= CHAMADA DO REPOSITÓRIO (A MÁGICA) ==========
+        
+        // Chamamos o método CreateOrder com os 5 argumentos que ele espera
+        int novoPedidoId = _orderRepository.CreateOrder(
+            cart, 
+            summary, 
+            model, // 'model' tem FormaPagamento, Observacoes, etc.
+            customerId.Value, 
+            enderecoId.Value // Passando o ID do endereço vindo da Sessão
+        );
+
+        // 5. ========= RESPOSTA (Sucesso ou Falha) ==========
+        if (novoPedidoId > 0)
+        {
+            // SUCESSO!
+            // Limpe tudo da sessão para o próximo pedido
+            HttpContext.Session.Remove("Cart");
+            HttpContext.Session.Remove("PaymentSummary");
+            HttpContext.Session.Remove("AddressId"); // Limpe o endereço também
+            
+            // Redirecione para a página de Detalhes do Pedido
+            return RedirectToAction("Index","Home");
         }
         else
         {
-            return RedirectToAction("Details"); 
+            ModelState.AddModelError(string.Empty, "Houve um erro ao processar seu pedido. Tente novamente.");
+            return View("Payment", summary);
         }
     }
+
+    private PaymentSummaryViewModel GetPaymentSummary()
+    {
+        string summaryJson = HttpContext.Session.GetString("PaymentSummary");
+
+        if (string.IsNullOrEmpty(summaryJson))
+        {
+            return new PaymentSummaryViewModel();
+        }
+
+        return JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryJson);
+    }
+    
+
 }

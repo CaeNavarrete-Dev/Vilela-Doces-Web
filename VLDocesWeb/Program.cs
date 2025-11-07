@@ -18,6 +18,9 @@ builder.Services.AddTransient<IProductRepository>(_ =>
 builder.Services.AddTransient<IProdCategorieRepository>(_ =>
     new ProdCategorieDatabaseRepository(
         builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddTransient<IOrderRepository>(_ => 
+    new OrderDatabaseRepository(
+        builder.Configuration.GetConnectionString("Default")));
 
 //App
 var app = builder.Build();
