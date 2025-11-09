@@ -1,5 +1,6 @@
 //Builder
 using VLDocesWeb.Repositories;
+using VLDocesWeb.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -16,6 +17,9 @@ builder.Services.AddTransient<IProductRepository>(_ =>
 builder.Services.AddTransient<IProdCategorieRepository>(_ =>
     new ProdCategorieDatabaseRepository(
         builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddTransient<IOrderRepository>(_ =>
+    new OrderRepository(
+        builder.Configuration.GetConnectionString("default")));
 
 //App
 var app = builder.Build();

@@ -1,0 +1,119 @@
+@model List<VLDocesWeb.Models.Order>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Lista de Pedidos";
+
+    // Função para traduzir o status do pedido
+    string TraduzStatus(int status)
+    {
+        return status switch
+        {
+            0 => "Em análise",
+            1 => "Confirmado",
+            2 => "Cancelado",
+            3 => "Pronto p/ retirada",
+            4 => "Negado",
+            5 => "Finalizado",
+            _ => "Desconhecido"
+        };
+    }   
+}
+
+<div class="container mt-4">
+    <a href="~/InitialCo/Index" class="btn btn-outline-secondary btn-lg mb-3" tabindex="-1" role="button">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+
+    <h2 class="mb-4 text-center">🧾 Lista de Pedidos</h2>
+
+    <div class="mb-4 text-center">
+    <h4 class="mb-3">Filtrar por Status:</h4>
+
+    <div class="dropdown d-inline-block">
+        <button class="btn btn-dark dropdown-toggle" type="button" 
+                id="dropdownStatusFilter" data-bs-toggle="dropdown" 
+                aria-expanded="false">
+            Status do Pedido
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownStatusFilter">
+            <li>
+                <a class="dropdown-item" href="@Url.Action("ListOrder", "Order")">
+                    Todos os Pedidos
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            
+            @for (int i = 0; i <= 5; i++)
+            {
+                <li>
+                    <a class="dropdown-item" 
+                       href="@Url.Action("ListarPorStatus", "Order", new { status = i })">
+                        @TraduzStatus(i)
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var order in Model)
+        {
+            <div class="col">
+                <div class="card shadow-sm border-dark">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">Pedido #@order.Id</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Data:</strong> @order.Data.ToString("dd/MM/yyyy HH:mm")</p>
+                        <p><strong>Total:</strong> @order.Total.ToString("C")</p>
+                        <p><strong>Status:</strong> <span class="badge bg-dark">
+                            @TraduzStatus(order.Status)
+                        </span></p>
+                        <hr />
+                        <p><strong>Cliente ID:</strong> @order.IdCliente</p>
+                        <p><strong>Colaborador ID:</strong> @order.IdColaborador</p>
+
+                        <div class="dropdown d-inline mt-2">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton-@order.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                Alterar Status
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@order.Id">
+                                @for (int i = 0; i <= 5; i++)
+                                {
+                                    <li>
+                                        <form method="post" asp-action="Update" asp-controller="Order">
+                                            <input type="hidden" name="id" value="@order.Id" />
+                                            <input type="hidden" name="status" value="@i" />
+                                            <button type="submit" class="dropdown-item">
+                                                @TraduzStatus(i)
+                                            </button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a href="@Url.Action("Details", "Order", new { id = order.Id })"
+                           class="btn btn-outline-primary btn-sm">Detalhes</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+//Atualiza a pag sempre que mudo o status de um pedido
+//ou filtro pedidos
+$('form').on('submit', function(e){
+    e.preventDefault();
+    $.post($(this).attr('action'), $(this).serialize(), function(){
+        alert('Status atualizado!');
+        location.reload();
+    });
+});
+</script>
