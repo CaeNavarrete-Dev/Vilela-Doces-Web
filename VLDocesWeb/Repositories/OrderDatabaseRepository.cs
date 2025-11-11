@@ -31,6 +31,8 @@ namespace VLDocesWeb.Repositories
                 if (result != null && result != DBNull.Value)
                 {
                     int novoPedidoId = Convert.ToInt32(result); 
+
+                    cmd.CommandType = CommandType.Text;
                     
                     foreach (var item in cart)
                     {
