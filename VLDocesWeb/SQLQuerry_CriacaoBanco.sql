@@ -1,5 +1,6 @@
 -----Criação do Banco-----
 create database db_Vilela_Doces
+go
 
 use db_Vilela_Doces
 go
@@ -52,9 +53,19 @@ create table Enderecos
 	cidade varchar(100),
 	uf varchar(100),
 	-- chave estrangeira
-	id_cliente int not null references Clientes (id_pessoa)
+	id_cliente int null references Clientes (id_pessoa)
 )
 go
+
+---- Endereço da Loja ----
+insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf) 
+values('Loja oficial', 'Rua dos Bobos', 'nº0', 'Jd. dos Bobos', '12345123', 'Potirendaba', 'SP')
+go
+insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf, id_cliente) 
+values('Casa', 'São Carlos', '360', 'Jd. Europa', '15014480', 'São José do Rio Preto', 'SP', 2)
+GO
+
+drop TABLE Enderecos
 
 ----//Categorias//
 create table Categorias
@@ -89,10 +100,12 @@ create table Pedidos
 	id_pedido int not null primary key identity,
 	total money null,
 	data_hora datetime not null,
-	status int not null, check(status between 0 and 5), 
+	status int not null, check(status between 0 and 5),
+	observacoes varchar(200) default null,
+	frete money default 0.00,
 	--chaves estrangeiras
 	id_cliente int not null references Clientes (id_pessoa),
-	id_colaborador int not null references Colaboradores (id_pessoa)
+	id_colaborador int references Colaboradores (id_pessoa)
 	-- Status:
 	-- 0.Em análise 
 	-- 1.Confirmado 
@@ -109,12 +122,11 @@ create table Pagamentos
 	id_pagamento int not null primary key identity,
 	forma_pagamento int not null, check (status between 0 and 3), 
 	status int not null, check(status between 0 and 3), 
-	data_pagamento datetime not null,
+	data_pagamento datetime,
 	data_limite datetime not null,
 	valor_pago money not null,
 	-- chave estrangeira
-	id_pedido int not null references Pedidos(id_pedido),
-	id_cliente int not null references Clientes(id_pessoa)
+	id_pedido int not null references Pedidos(id_pedido)
 -- Forma Pag
 -- 0.Dinheiro
 -- 1.Pix
@@ -131,15 +143,15 @@ create table Entregas
 (
 	id_entrega int not null primary key identity,
 	data_prazo datetime not null,
-	data_entrega datetime not null,
+	data_entrega datetime,
 	status int not null, check(status between 0 and 1), 
 	observacao varchar(500),
 	-- chave estrangeira
-	id_pedidos int not null references Pedidos (id_pedido),
-	id_cliente int not null references Clientes (id_pessoa)
+	id_pedido int not null references Pedidos (id_pedido),
+	id_endereco int not null references Enderecos (id_endereco)
 -- Status
--- 0. Concluído
--- 1. Não concluído
+-- 0. Não Concluída
+-- 1. Concluída
 )
 go
 
@@ -160,9 +172,9 @@ select * from Categorias
 select * from Clientes
 select * from Colaboradores
 select * from Enderecos
+select * from Pessoas
 select * from Entregas
 select * from Itens_Pedidos
 select * from Pagamentos
 select * from Pedidos
-select * from Pessoas
 select * from Produtos

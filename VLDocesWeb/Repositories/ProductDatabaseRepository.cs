@@ -24,7 +24,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
         cmd.ExecuteNonQuery();
     }
 
-    public List<Product> ListAll()
+    public List<Product> ListAllOrder()
     {
         List<Product> _products = new List<Product>();
         SqlCommand cmd = new SqlCommand();
@@ -38,7 +38,7 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
             {
                 Id_Produto = (int)reader["id_produto"],
                 Nome = (string)reader["nome_produto"],
-                Preco = (float)Convert.ToDouble(reader["preco"]),
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
                 Id_Categoria = (int)reader["id_categoria"],
                 Descricao = (string)reader["descricao"]
             };
@@ -46,5 +46,98 @@ public class ProductDatabaseRepository : DBConnection, IProductRepository
         }
         return _products;
     }
+
+    public List<Product> ListAllPackage()
+    {
+        List<Product> _products = new List<Product>();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = "select p.id_produto, p.nome_produto, p.descricao, p.preco, p.id_categoria from Categorias c, Produtos p where c.id_categoria = p.id_categoria and c.id_categoria = 2";
+
+        SqlDataReader reader = cmd.ExecuteReader();
+        while(reader.Read())
+        {
+            Product product = new Product
+            {
+                Id_Produto = (int)reader["id_produto"],
+                Nome = (string)reader["nome_produto"],
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
+                Id_Categoria = (int)reader["id_categoria"],
+                Descricao = (string)reader["descricao"]
+            };
+            _products.Add(product);
+        }
+        return _products;
+    }
+
+    public List<Product> ListAll()
+    {
+        List<Product> _products = new List<Product>();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = "select p.id_produto, p.nome_produto, p.descricao, p.preco, p.id_categoria from Categorias c, Produtos p where c.id_categoria = p.id_categoria";
+
+        SqlDataReader reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            Product product = new Product
+            {
+                Id_Produto = (int)reader["id_produto"],
+                Nome = (string)reader["nome_produto"],
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
+                Id_Categoria = (int)reader["id_categoria"],
+                Descricao = (string)reader["descricao"]
+            };
+            _products.Add(product);
+        }
+        return _products;
+    }
+    
+    public void Delete(int id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = "delete from Produtos where id_produto = @id";
+        cmd.Parameters.AddWithValue("@id", id);
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public Product Read(int id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = "select * from Produtos where id_produto = @id";
+        cmd.Parameters.AddWithValue("@id", id);
+
+        SqlDataReader reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            return new Product
+            {
+                Id_Produto = (int)reader["id_produto"],
+                Nome = (string)reader["nome_produto"],
+                Preco = (decimal)Convert.ToDouble(reader["preco"]),
+                Id_Categoria = (int)reader["id_categoria"],
+                Descricao = (string)reader["descricao"]
+            };
+        }
+        return null;
+    }
+
+    public void Update(Product model)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = "update Produtos set nome_produto = @nome_produto, preco = @preco, id_categoria = @id_categoria, descricao = @descricao where id_produto = @id_produto";
+        cmd.Parameters.AddWithValue("nome_produto", model.Nome);
+        cmd.Parameters.AddWithValue("preco", model.Preco);
+        cmd.Parameters.AddWithValue("id_categoria", model.Id_Categoria);
+        cmd.Parameters.AddWithValue("descricao", model.Descricao);
+        cmd.Parameters.AddWithValue("id_produto", model.Id_Produto);
+
+        cmd.ExecuteNonQuery();
+    }
+
 }
 
