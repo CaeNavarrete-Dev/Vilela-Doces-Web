@@ -25,10 +25,10 @@ builder.Services.AddTransient<IOrderRepository>(_ =>
 //App
 var app = builder.Build();
 
-var supportedCultures = new[] { new CultureInfo("en-US") };
+var supportedCultures = new[] { new CultureInfo("pt-BR") };
 var localizationOptions = new RequestLocalizationOptions
 {
-    DefaultRequestCulture = new RequestCulture("en-US"),
+    DefaultRequestCulture = new RequestCulture("pt-BR"),
 
     SupportedCultures = supportedCultures,
 

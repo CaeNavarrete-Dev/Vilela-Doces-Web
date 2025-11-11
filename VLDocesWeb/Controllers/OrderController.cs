@@ -163,7 +163,7 @@ public class OrderController : Controller
         // 1. ========= VALIDAÇÃO DO FORMULÁRIO (Seu código está ótimo) ==========
         
         // Validação de Troco (um pouco mais robusta)
-        if (model.FormaPagamento == "0") // 0 = Dinheiro
+        if (model.FormaPagamento == 0) // 0 = Dinheiro
         {
             if (model.NaoPrecisoTroco)
             {
@@ -221,7 +221,7 @@ public class OrderController : Controller
             HttpContext.Session.Remove("AddressId"); // Limpe o endereço também
             
             // Redirecione para a página de Detalhes do Pedido
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index","Initial");
         }
         else
         {
@@ -241,6 +241,4 @@ public class OrderController : Controller
 
         return JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryJson);
     }
-    
-
 }
