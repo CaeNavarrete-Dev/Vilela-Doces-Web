@@ -1,5 +1,4 @@
-namespace VLDocesWeb.Models
-{
+namespace VLDocesWeb.Models {
     public class Order
     {
         public int Id { get; set; }
@@ -10,3 +9,4 @@ namespace VLDocesWeb.Models
         public int IdColaborador { get; set; }
     }
 }
+

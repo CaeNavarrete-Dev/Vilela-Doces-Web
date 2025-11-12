@@ -13,8 +13,8 @@ public class OrderController : Controller
     private IOrderRepository _orderRepository;
     public OrderController(IProductRepository productRepository, IOrderRepository orderRepository)
     {
-        _productRepository = productRepository;
-        _orderRepository = orderRepository;
+        this._productRepository = productRepository;
+        this._orderRepository = orderRepository;
     }
 
     public ActionResult Index()
@@ -54,7 +54,7 @@ public class OrderController : Controller
         }
         else
         {
-            Product produto = repository.Read(id);
+            Product produto = _productRepository.Read(id);
             if (produto != null)
             {
                 cart.Add(new CartItem
@@ -201,7 +201,7 @@ public class OrderController : Controller
             return RedirectToAction("Cart");
         }
 
-        int novoPedidoId = _orderRepository.CreateOrder(
+        int novoPedidoId = _orderRepository.Criar(
             cart, 
             summary, 
             model, 
