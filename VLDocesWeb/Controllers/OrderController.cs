@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VLDocesWeb.Repositories;
+using VLDocesWeb.Models;
 namespace VLDocesWeb.Controllers;
 using System.Text.Json;
 using System.Collections.Generic;
@@ -8,17 +9,30 @@ using Microsoft.VisualBasic;
 
 public class OrderController : Controller
 {
-    private IProductRepository repository;
+    private IProductRepository _productRepository;
     private IOrderRepository _orderRepository;
-    public OrderController(IProductRepository repository, IOrderRepository orderRepository)
+    public OrderController(IProductRepository productRepository, IOrderRepository orderRepository)
     {
-        this.repository = repository;
-        this._orderRepository = orderRepository;
+        _productRepository = productRepository;
+        _orderRepository = orderRepository;
     }
+
     public ActionResult Index()
     {
-        var _products = repository.ListAllOrder();
-        return View(_products);
+        var products = _productRepository.ListAllOrder();
+        return View(products);
+    }
+
+    public ActionResult ListOrder()
+    {
+        var orders = _orderRepository.Listar();
+        return View(orders);
+    }
+
+    public ActionResult ListarPorStatus(int status)
+    {
+        var orders = _orderRepository.ListarPorStatus(status);
+        return View("ListOrder", orders);
     }
 
     [HttpPost]
