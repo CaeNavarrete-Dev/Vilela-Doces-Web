@@ -160,67 +160,47 @@ public class OrderController : Controller
     [HttpPost]
     public IActionResult ProcessPayment(PaymentSubmissionViewModel model)
     {
-        // 1. ========= VALIDAÇÃO DO FORMULÁRIO (Seu código está ótimo) ==========
-        
-        // Validação de Troco (um pouco mais robusta)
-        if (model.FormaPagamento == 0) // 0 = Dinheiro
+        if (model.FormaPagamento == 0)
         {
             if (model.NaoPrecisoTroco)
             {
-                model.ValorTroco = null; // Limpa o valor se a caixa estiver marcada
-            }
-            // Se "NaoPrecisoTroco" NÃO está marcada E o valor é inválido...
-            else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
+                model.ValorTroco = null; 
+            } else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
             {
                 ModelState.AddModelError("ValorTroco", "Para troco, o valor deve ser maior que o Total a Pagar.");
             }
         }
         
-        // Se o modelo geral for inválido (incluindo o erro de troco acima)
         if (!ModelState.IsValid)
         {
-            // Retorna para a view de Pagamento, enviando o resumo de volta
             return View("Payment", GetPaymentSummary());
         }
 
-        // 2. ========= COLETA DE DADOS DA SESSÃO ==========
-        
         var cart = GetCartFromSession();
         var summary = GetPaymentSummary();
 
-        // Baseado no seu AddressController e no login:
         var customerId = HttpContext.Session.GetInt32("UserId"); 
         var enderecoId = HttpContext.Session.GetInt32("AddressId");
 
-        // 3. ========= VERIFICAÇÃO DE SEGURANÇA ==========
-        // Se a sessão expirou ou o carrinho está vazio
         if (customerId == null || enderecoId == null || !cart.Any())
         {
-            // Se faltar dados vitais, mande o usuário de volta para o início.
             return RedirectToAction("Cart");
         }
 
-        // 4. ========= CHAMADA DO REPOSITÓRIO (A MÁGICA) ==========
-        
-        // Chamamos o método CreateOrder com os 5 argumentos que ele espera
         int novoPedidoId = _orderRepository.CreateOrder(
             cart, 
             summary, 
-            model, // 'model' tem FormaPagamento, Observacoes, etc.
+            model, 
             customerId.Value, 
-            enderecoId.Value // Passando o ID do endereço vindo da Sessão
+            enderecoId.Value 
         );
 
-        // 5. ========= RESPOSTA (Sucesso ou Falha) ==========
         if (novoPedidoId > 0)
         {
-            // SUCESSO!
-            // Limpe tudo da sessão para o próximo pedido
             HttpContext.Session.Remove("Cart");
             HttpContext.Session.Remove("PaymentSummary");
-            HttpContext.Session.Remove("AddressId"); // Limpe o endereço também
+            HttpContext.Session.Remove("AddressId"); 
             
-            // Redirecione para a página de Detalhes do Pedido
             return RedirectToAction("Index","Initial");
         }
         else
