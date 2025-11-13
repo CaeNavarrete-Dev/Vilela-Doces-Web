@@ -240,7 +240,7 @@ public class OrderController : Controller
     public ActionResult Details(int id)
     {
         var orderDetails = _orderRepository.GetOrderDetails(id);
-        if (orderDetails == null || !orderDetails.Any())
+        if (orderDetails == null)
         {
             return RedirectToAction("Index");
         }

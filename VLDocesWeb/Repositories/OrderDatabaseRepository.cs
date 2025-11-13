@@ -176,7 +176,6 @@ namespace VLDocesWeb.Repositories
                 };
                 detailsList.Add(item);
             }
-            reader.Close();
             return detailsList;
         }
     }
