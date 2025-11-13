@@ -1,3 +1,4 @@
+@using VLDocesWeb.Models
 @model List<VLDocesWeb.Models.Order>
 
 @{
@@ -97,8 +98,11 @@
                         </div>
                     </div>
                     <div class="card-footer text-end">
-                        <a href="@Url.Action("Details", "Order", new { id = order.Id })"
-                           class="btn btn-outline-primary btn-sm">Detalhes</a>
+                        <form action="/Order/Details/@order.Id" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

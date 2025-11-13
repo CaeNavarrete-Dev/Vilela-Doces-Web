@@ -116,9 +116,12 @@ namespace VLDocesWeb.Repositories
                 while (reader.Read())
                 {
                     int id_colaborador;
-                    if(reader.IsDBNull(reader.GetOrdinal("id_colaborador"))) {
+                    if (reader.IsDBNull(reader.GetOrdinal("id_colaborador")))
+                    {
                         id_colaborador = 0;
-                    } else {
+                    }
+                    else
+                    {
                         id_colaborador = (int)reader["id_colaborador"];
                     }
                     lista.Add(
@@ -134,7 +137,47 @@ namespace VLDocesWeb.Repositories
                     );
                 }
             }
+            
             return lista;
+        }
+        
+        public List<OrderDetailsModel> GetOrderDetails(int id)
+        {
+            var detailsList = new List<OrderDetailsModel>();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "SELECT * FROM v_DetalhesPedidos WHERE Pedido = @id";
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var item = new OrderDetailsModel
+                {
+                    Pedido = (int)reader["Pedido"],
+                    Total = (decimal)reader["Total"],
+                    Data = (DateTime)reader["Data"],
+                    StatusPedido = (string)reader["StatusPedido"],
+                    IdCliente = (int)reader["IdCliente"],
+                    Cliente = (string)reader["Cliente"],
+                    Produto = (string)reader["Produto"],
+                    Descricao = (string)reader["Descricao"],
+                    PrecoVendido = (decimal)reader["PrecoVendido"],
+                    Quantidade = (int)reader["Quantidade"],
+                    PrecoItem = (decimal)reader["PrecoItem"],
+                    FormaPagamento = (string)reader["FormaPagamento"],
+                    StatusPagamento = (string)reader["StatusPagamento"],
+                    PrazoEntrega = (DateTime)reader["PrazoEntrega"],
+                    StatusEntrega = (string)reader["StatusEntrega"],
+                    Endereco = (string)reader["Endereco"],
+
+                    Observacoes = reader["Observacoes"] == DBNull.Value ? "" : (string)reader["Observacoes"],
+                    Colaborador = reader["Colaborador"] == DBNull.Value ? "Nenhum" : (string)reader["Colaborador"],
+                    DataEntrega = reader["DataEntrega"] == DBNull.Value ? null : (DateTime?)reader["DataEntrega"]
+                };
+                detailsList.Add(item);
+            }
+            reader.Close();
+            return detailsList;
         }
     }
 }

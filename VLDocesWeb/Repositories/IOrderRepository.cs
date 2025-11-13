@@ -8,4 +8,6 @@ public interface IOrderRepository
     List<Order> Listar();
     // void Update(Order order); // Não consegui
     List<Order> ListarPorStatus(int status);
+
+    List<OrderDetailsModel> GetOrderDetails(int id);
 }

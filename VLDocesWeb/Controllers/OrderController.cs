@@ -235,4 +235,15 @@ public class OrderController : Controller
 
         return JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryJson);
     }
+
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        var orderDetails = _orderRepository.GetOrderDetails(id);
+        if (orderDetails == null || !orderDetails.Any())
+        {
+            return RedirectToAction("Index");
+        }
+        return View("Details", orderDetails);
+    }
 }
