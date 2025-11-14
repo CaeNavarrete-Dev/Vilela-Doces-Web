@@ -48,6 +48,18 @@ public class OrderController : Controller
 
     public ActionResult History()
     {
-        return View("History");
+        var idClienteSession = HttpContext.Session.GetInt32("UserId");
+
+        if (!idClienteSession.HasValue || idClienteSession.Value <= 0)
+        {
+            // Se o ID não for encontrado ou for 0/negativo, redireciona.
+            return RedirectToAction("Login", "Account"); 
+        }
+
+        int idCliente = idClienteSession.Value;
+
+        var orders = _orderRepository.ListarPorCliente(idCliente);
+
+        return View("History", orders);
     }
 }

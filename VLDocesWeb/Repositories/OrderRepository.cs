@@ -49,7 +49,7 @@ namespace VLDocesWeb.Repositories
         }
 
         public void Update(Order order){} //não consegui
-        
+
 
         public List<Order> ListarPorStatus(int status)
         {
@@ -60,6 +60,35 @@ namespace VLDocesWeb.Repositories
 
             cmd.CommandText = "SELECT * FROM Pedidos WHERE status = @status ORDER BY id_pedido DESC";
             cmd.Parameters.AddWithValue("@status", status);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    lista.Add(
+                        new Order
+                        {
+                            Id = (int)reader["id_pedido"],
+                            Total = (decimal)reader["total"],
+                            Data = (DateTime)reader["data_hora"],
+                            Status = (int)reader["status"],
+                            IdCliente = (int)reader["id_cliente"],
+                            IdColaborador = (int)reader["id_colaborador"],
+                        }
+                    );
+                }
+            }
+            return lista;
+        }
+        
+        public List<Order> ListarPorCliente(int idCliente)
+        {
+            var lista = new List<Order>();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+
+            cmd.CommandText = "SELECT * FROM Pedidos WHERE id_cliente = @idCliente ORDER BY id_pedido DESC";
+            cmd.Parameters.AddWithValue("@idCliente", idCliente);
 
             using (SqlDataReader reader = cmd.ExecuteReader())
             {
