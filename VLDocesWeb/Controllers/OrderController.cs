@@ -41,9 +41,16 @@ public class OrderController : Controller
         return View("Payment");
     }
 
-    public ActionResult Details()
+    public ActionResult Details(int id)
     {
-        return View("Details");
+        var idCliente = (int)HttpContext.Session.GetInt32("UserId");
+
+        var order = _orderRepository.GetById(id);
+        var items = _orderRepository.ListarItensPorPedido(id);
+
+        // Passamos a Order como Model principal, e os Itens via ViewBag
+        ViewBag.OrderItems = items;
+        return View("Details", order);
     }
 
     public ActionResult History()
