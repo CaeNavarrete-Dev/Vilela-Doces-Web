@@ -78,11 +78,86 @@
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-header">
-            <h5 class="mb-0">Ações do Colaborador</h5>
-        </div>
-        <div class="card-body">
-            <p>Formulários para alterar status do pedido, pagamento e entrega virão aqui.</p>
+    <div class="card-header">
+        <h5 class="mb-0">Ações do Colaborador</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            
+            <div class="col-md-4 border-end">
+                <h5>Atribuição</h5>
+                @if (pedidoInfo.Colaborador == "Nenhum")
+                {
+                    <p>Este pedido não tem um colaborador.</p>
+                    <form action="/Order/AssignToMe" method="POST">
+                        <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-user-check"></i> Atribuir a mim
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <p>Gerenciado por: <strong>@pedidoInfo.Colaborador</strong></p>
+                }
             </div>
+
+            <div class="col-md-4 border-end">
+                <h5>Status do Pedido</h5>
+                <form action="/Order/UpdateOrderStatus" method="POST">
+                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                    
+                    <select name="newStatus" class="form-select mb-2">
+                        <option value="0" @(pedidoInfo.StatusPedido == "Em análise" ? "selected" : "")>Em análise</option>
+                        <option value="1" @(pedidoInfo.StatusPedido == "Confirmado" ? "selected" : "")>Confirmado</option>
+                        <option value="2" @(pedidoInfo.StatusPedido == "Cancelado" ? "selected" : "")>Cancelado</option>
+                        <option value="3" @(pedidoInfo.StatusPedido == "Pronto p/ retirada" ? "selected" : "")>Pronto p/ retirada</option>
+                        <option value="4" @(pedidoInfo.StatusPedido == "Negado" ? "selected" : "")>Negado</option>
+                        <option value="5" @(pedidoInfo.StatusPedido == "Finalizado" ? "selected" : "")>Finalizado</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Atualizar Pedido</button>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Status do Pagamento</h5>
+                <form action="/Order/UpdatePaymentStatus" method="POST">
+                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                    
+                    <select name="newStatus" class="form-select mb-2">
+                        <option value="0" @(pedidoInfo.StatusPagamento == "Pendente" ? "selected" : "")>Pendente</option>
+                        <option value="1" @(pedidoInfo.StatusPagamento == "Pago" ? "selected" : "")>Pago</option>
+                        <option value="2" @(pedidoInfo.StatusPagamento == "Cancelado" ? "selected" : "")>Cancelado</option>
+                        <option value="3" @(pedidoInfo.StatusPagamento == "Estornado" ? "selected" : "")>Estornado</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Atualizar Pagamento</button>
+                </form>
+                    <hr class="my-4"> <h5>Status da Entrega</h5>
+                    @if (pedidoInfo.StatusEntrega == "Não Concluída")
+                    {
+                        <form action="/Order/UpdateDeliveryStatus" method="POST">
+                            <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                            
+                            <select name="newStatus" class="form-select mb-2">
+                                <option value="0" selected>Não Concluída</option>
+                                <option value="1">Concluída</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Atualizar Entrega</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="text-success fw-bold">
+                            <i class="fa-solid fa-check-circle"></i> 
+                            Entrega Concluída
+                            @if(pedidoInfo.DataEntrega != null)
+                            {
+                                <br><small class="text-muted">em @pedidoInfo.DataEntrega</small>
+                            }
+                        </p>
+                    }
+            </div>
+
+        </div>
     </div>
 </div>

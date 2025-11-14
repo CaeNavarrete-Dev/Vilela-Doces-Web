@@ -66,3 +66,4 @@ SELECT
 SELECT TOP 1 * FROM Pedidos ORDER BY id_pedido DESC;
 SELECT TOP 1 * FROM Pagamentos ORDER BY id_pedido DESC;
 SELECT TOP 1 * FROM Entregas ORDER BY id_pedido DESC;
+

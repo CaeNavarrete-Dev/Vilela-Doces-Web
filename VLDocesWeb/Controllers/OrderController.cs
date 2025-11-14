@@ -246,4 +246,33 @@ public class OrderController : Controller
         }
         return View("Details", orderDetails);
     }
+
+    [HttpPost]
+    public ActionResult UpdateOrderStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdateOrderStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult UpdatePaymentStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdatePaymentStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult AssignToMe(int orderId)
+    {
+        var collaboratorId = HttpContext.Session.GetInt32("UserId"); // (Confirme se a chave é "UserId")
+        _orderRepository.AssignCollaborator(orderId, collaboratorId.Value);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult UpdateDeliveryStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdateDeliveryStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
 }

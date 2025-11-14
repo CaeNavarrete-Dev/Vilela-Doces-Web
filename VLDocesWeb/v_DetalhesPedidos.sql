@@ -41,3 +41,5 @@ left join Pagamentos pag on p.id_pedido = pag.id_pedido
 left join Entregas e on p.id_pedido = e.id_pedido
 left join Enderecos ender on e.id_endereco = ender.id_endereco
 go
+
+select * from v_DetalhesPedidos

@@ -178,5 +178,57 @@ namespace VLDocesWeb.Repositories
             }
             return detailsList;
         }
+
+        public void UpdateOrderStatus(int orderId, int newStatus)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "UPDATE Pedidos SET status = @status WHERE id_pedido = @orderId";
+            cmd.Parameters.AddWithValue("@status", newStatus);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdatePaymentStatus(int orderId, int newStatus)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "UPDATE Pagamentos SET status = @status WHERE id_pedido = @orderId";
+            cmd.Parameters.AddWithValue("@status", newStatus);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void AssignCollaborator(int orderId, int collaboratorId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "UPDATE Pedidos SET id_colaborador = @colabId WHERE id_pedido = @orderId";
+            cmd.Parameters.AddWithValue("@colabId", collaboratorId);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateDeliveryStatus(int orderId, int newStatus)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            string sqlQuery = @"UPDATE Entregas SET status = @status WHERE id_pedido = @orderId";
+            if (newStatus == 1)
+            {
+                sqlQuery = @"
+                    UPDATE Entregas 
+                    SET 
+                        status = @status, 
+                        data_entrega = GETDATE() 
+                    WHERE 
+                        id_pedido = @orderId";
+            }
+
+            cmd.CommandText = sqlQuery;
+            cmd.Parameters.AddWithValue("@status", newStatus);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

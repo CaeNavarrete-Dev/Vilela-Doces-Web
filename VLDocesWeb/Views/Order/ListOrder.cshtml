@@ -75,27 +75,6 @@
                         <hr />
                         <p><strong>Cliente ID:</strong> @order.IdCliente</p>
                         <p><strong>Colaborador ID:</strong> @order.IdColaborador</p>
-
-                        <div class="dropdown d-inline mt-2">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                                    id="dropdownMenuButton-@order.Id" data-bs-toggle="dropdown" aria-expanded="false">
-                                Alterar Status
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@order.Id">
-                                @for (int i = 0; i <= 5; i++)
-                                {
-                                    <li>
-                                        <form method="post" asp-action="Update" asp-controller="Order">
-                                            <input type="hidden" name="id" value="@order.Id" />
-                                            <input type="hidden" name="status" value="@i" />
-                                            <button type="submit" class="dropdown-item">
-                                                @TraduzStatus(i)
-                                            </button>
-                                        </form>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
                     </div>
                     <div class="card-footer text-end">
                         <a href="/Order/Details/@order.Id" class="btn btn-outline-primary btn-sm">

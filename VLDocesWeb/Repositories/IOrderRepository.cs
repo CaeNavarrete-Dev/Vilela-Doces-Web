@@ -10,4 +10,12 @@ public interface IOrderRepository
     List<Order> ListarPorStatus(int status);
 
     List<OrderDetailsModel> GetOrderDetails(int id);
+
+    void UpdateOrderStatus(int orderId, int newStatus);
+
+    void UpdatePaymentStatus(int orderId, int newStatus);
+
+    void AssignCollaborator(int orderId, int collaboratorId);
+    
+    void UpdateDeliveryStatus(int orderId, int newStatus);
 }
