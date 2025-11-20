@@ -65,7 +65,6 @@ insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf, id_cliente)
 values('Casa', 'São Carlos', '360', 'Jd. Europa', '15014480', 'São José do Rio Preto', 'SP', 2)
 GO
 
-drop TABLE Enderecos
 
 ----//Categorias//
 create table Categorias

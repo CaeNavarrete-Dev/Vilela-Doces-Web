@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VLDocesWeb.Repositories;
+using VLDocesWeb.Models;
 namespace VLDocesWeb.Controllers;
 using System.Text.Json;
 using System.Collections.Generic;
@@ -8,17 +9,30 @@ using Microsoft.VisualBasic;
 
 public class OrderController : Controller
 {
-    private IProductRepository repository;
+    private IProductRepository _productRepository;
     private IOrderRepository _orderRepository;
-    public OrderController(IProductRepository repository, IOrderRepository orderRepository)
+    public OrderController(IProductRepository productRepository, IOrderRepository orderRepository)
     {
-        this.repository = repository;
+        this._productRepository = productRepository;
         this._orderRepository = orderRepository;
     }
+
     public ActionResult Index()
     {
-        var _products = repository.ListAllOrder();
-        return View(_products);
+        var products = _productRepository.ListAllOrder();
+        return View(products);
+    }
+
+    public ActionResult ListOrder()
+    {
+        var orders = _orderRepository.Listar();
+        return View(orders);
+    }
+
+    public ActionResult ListarPorStatus(int status)
+    {
+        var orders = _orderRepository.ListarPorStatus(status);
+        return View("ListOrder", orders);
     }
 
     [HttpPost]
@@ -40,7 +54,7 @@ public class OrderController : Controller
         }
         else
         {
-            Product produto = repository.Read(id);
+            Product produto = _productRepository.Read(id);
             if (produto != null)
             {
                 cart.Add(new CartItem
@@ -110,14 +124,33 @@ public class OrderController : Controller
         return View("Payment", summary);
     }
 
-    public ActionResult Details()
+    public ActionResult DetailsVini(int id)
     {
-        return View("Details");
+        var idCliente = (int)HttpContext.Session.GetInt32("UserId");
+
+        var order = _orderRepository.GetById(id);
+        var items = _orderRepository.ListarItensPorPedido(id);
+
+        // Passamos a Order como Model principal, e os Itens via ViewBag
+        ViewBag.OrderItems = items;
+        return View("DetailsVini", order);
     }
 
     public ActionResult History()
     {
-        return View("History");
+        var idClienteSession = HttpContext.Session.GetInt32("UserId");
+
+        if (!idClienteSession.HasValue || idClienteSession.Value <= 0)
+        {
+            // Se o ID não for encontrado ou for 0/negativo, redireciona.
+            return RedirectToAction("Login", "Account"); 
+        }
+
+        int idCliente = idClienteSession.Value;
+
+        var orders = _orderRepository.ListarPorCliente(idCliente);
+
+        return View("History", orders);
     }
 
     [HttpGet]
@@ -160,68 +193,48 @@ public class OrderController : Controller
     [HttpPost]
     public IActionResult ProcessPayment(PaymentSubmissionViewModel model)
     {
-        // 1. ========= VALIDAÇÃO DO FORMULÁRIO (Seu código está ótimo) ==========
-        
-        // Validação de Troco (um pouco mais robusta)
-        if (model.FormaPagamento == "0") // 0 = Dinheiro
+        if (model.FormaPagamento == 0)
         {
             if (model.NaoPrecisoTroco)
             {
-                model.ValorTroco = null; // Limpa o valor se a caixa estiver marcada
-            }
-            // Se "NaoPrecisoTroco" NÃO está marcada E o valor é inválido...
-            else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
+                model.ValorTroco = null; 
+            } else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
             {
                 ModelState.AddModelError("ValorTroco", "Para troco, o valor deve ser maior que o Total a Pagar.");
             }
         }
         
-        // Se o modelo geral for inválido (incluindo o erro de troco acima)
         if (!ModelState.IsValid)
         {
-            // Retorna para a view de Pagamento, enviando o resumo de volta
             return View("Payment", GetPaymentSummary());
         }
 
-        // 2. ========= COLETA DE DADOS DA SESSÃO ==========
-        
         var cart = GetCartFromSession();
         var summary = GetPaymentSummary();
 
-        // Baseado no seu AddressController e no login:
         var customerId = HttpContext.Session.GetInt32("UserId"); 
         var enderecoId = HttpContext.Session.GetInt32("AddressId");
 
-        // 3. ========= VERIFICAÇÃO DE SEGURANÇA ==========
-        // Se a sessão expirou ou o carrinho está vazio
         if (customerId == null || enderecoId == null || !cart.Any())
         {
-            // Se faltar dados vitais, mande o usuário de volta para o início.
             return RedirectToAction("Cart");
         }
 
-        // 4. ========= CHAMADA DO REPOSITÓRIO (A MÁGICA) ==========
-        
-        // Chamamos o método CreateOrder com os 5 argumentos que ele espera
-        int novoPedidoId = _orderRepository.CreateOrder(
+        int novoPedidoId = _orderRepository.Criar(
             cart, 
             summary, 
-            model, // 'model' tem FormaPagamento, Observacoes, etc.
+            model, 
             customerId.Value, 
-            enderecoId.Value // Passando o ID do endereço vindo da Sessão
+            enderecoId.Value 
         );
 
-        // 5. ========= RESPOSTA (Sucesso ou Falha) ==========
         if (novoPedidoId > 0)
         {
-            // SUCESSO!
-            // Limpe tudo da sessão para o próximo pedido
             HttpContext.Session.Remove("Cart");
             HttpContext.Session.Remove("PaymentSummary");
-            HttpContext.Session.Remove("AddressId"); // Limpe o endereço também
+            HttpContext.Session.Remove("AddressId"); 
             
-            // Redirecione para a página de Detalhes do Pedido
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index","Initial");
         }
         else
         {
@@ -241,6 +254,44 @@ public class OrderController : Controller
 
         return JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryJson);
     }
-    
 
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        var orderDetails = _orderRepository.GetOrderDetails(id);
+        if (orderDetails == null)
+        {
+            return RedirectToAction("Index");
+        }
+        return View("Details", orderDetails);
+    }
+
+    [HttpPost]
+    public ActionResult UpdateOrderStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdateOrderStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult UpdatePaymentStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdatePaymentStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult AssignToMe(int orderId)
+    {
+        var collaboratorId = HttpContext.Session.GetInt32("UserId"); // (Confirme se a chave é "UserId")
+        _orderRepository.AssignCollaborator(orderId, collaboratorId.Value);
+        return RedirectToAction("Details", new { id = orderId });
+    }
+
+    [HttpPost]
+    public ActionResult UpdateDeliveryStatus(int orderId, int newStatus)
+    {
+        _orderRepository.UpdateDeliveryStatus(orderId, newStatus);
+        return RedirectToAction("Details", new { id = orderId });
+    }
 }

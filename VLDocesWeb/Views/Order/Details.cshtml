@@ -1,75 +1,163 @@
-<!DOCTYPE html>
-<html>
+@model List<VLDocesWeb.Models.OrderDetailsModel>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Details";
+    // Vamos pegar o primeiro item da lista para os dados gerais
+    var pedidoInfo = Model.First();
+    ViewData["Title"] = "Detalhes do Pedido #" + pedidoInfo.Pedido;
 }
-<a href="~/Order/History" class="btn btn-outline-secondary btn-lg mb-2" tabindex="-1" role="button"><i class="bi bi-arrow-left"></i></a>
-<div class="container my-4">
 
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h5 class="fw-semibold mb-2">Pedido nº 702-3308580-7573834</h5>
-            <p class="text-muted mb-1">
-                Realizado em: <span class="fw-semibold">6 de setembro de 2025</span>
-            </p>
-            <p class="text-muted mb-0">
-                Status: <span class="fw-semibold text-success">Entregue</span>
-            </p>
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <a href="/Order/ListOrder" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Voltar para Lista
+            </a>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-3">
-        <div class="row g-0 align-items-center">
-            <div class="col-md-2 text-center">
-                <img src="~/lib/produto1.png" class="img-fluid p-2 rounded" alt="Produto">
-            </div>
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h6 class="fw-semibold mb-1">Pão de Mel Gourmet</h6>
-                    <p class="text-muted small mb-1">Quantidade: 2</p>
-                    <p class="fw-semibold text-dark mb-0">R$ 12,00</p>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Pedido #@pedidoInfo.Pedido</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Cliente:</strong> @pedidoInfo.Cliente (ID: @pedidoInfo.IdCliente)<br>
+                    <strong>Data:</strong> @pedidoInfo.Data.ToString("dd/MM/yyyy HH:mm")<br>
+                    <strong>Colaborador:</strong> @pedidoInfo.Colaborador
+                </div>
+                <div class="col-md-4">
+                    <strong>Status Pedido:</strong> <span class="badge bg-primary">@pedidoInfo.StatusPedido</span><br>
+                    <strong>Status Pagamento:</strong> <span class="badge bg-warning text-dark">@pedidoInfo.StatusPagamento</span><br>
+                    <strong>Status Entrega:</strong> <span class="badge bg-info text-dark">@pedidoInfo.StatusEntrega</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Forma Pagamento:</strong> @pedidoInfo.FormaPagamento<br>
+                    <strong>Endereço Entrega:</strong> @pedidoInfo.Endereco<br>
+                    <strong>Observações:</strong> @pedidoInfo.Observacoes
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-3">
-        <div class="row g-0 align-items-center">
-            <div class="col-md-2 text-center">
-                <img src="~/lib/produto2.png" class="img-fluid p-2 rounded" alt="Produto">
-            </div>
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h6 class="fw-semibold mb-1">Torta de Limão Siciliano</h6>
-                    <p class="text-muted small mb-1">Quantidade: 1</p>
-                    <p class="fw-semibold text-dark mb-0">R$ 35,00</p>
-                </div>
-            </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Itens Inclusos</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Produto</th>
+                        <th>Descrição</th>
+                        <th>Preço Vendido</th>
+                        <th>Qtd.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Produto</td>
+                            <td>@item.Descricao</td>
+                            <td>@item.PrecoVendido.ToString("C2")</td>
+                            <td>@item.Quantidade</td>
+                            <td>@item.PrecoItem.ToString("C2")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr classD="table-dark text-white">
+                        <td colspan="4" class="text-end"><strong>Total (com frete):</strong></td>
+                        <td><strong>@pedidoInfo.Total.ToString("C2")</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mt-4">
-        <div class="card-body">
-            <h6 class="fw-semibold mb-3">Resumo do Pedido</h6>
-            <div class="d-flex justify-content-between">
-                <span>Subtotal:</span>
-                <span>R$ 47,00</span>
+    <div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">Ações do Colaborador</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            
+            <div class="col-md-4 border-end">
+                <h5>Atribuição</h5>
+                @if (pedidoInfo.Colaborador == "Nenhum")
+                {
+                    <p>Este pedido não tem um colaborador.</p>
+                    <form action="/Order/AssignToMe" method="POST">
+                        <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-user-check"></i> Atribuir a mim
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <p>Gerenciado por: <strong>@pedidoInfo.Colaborador</strong></p>
+                }
             </div>
-            <div class="d-flex justify-content-between">
-                <span>Frete:</span>
-                <span>R$ 0,00</span>
+
+            <div class="col-md-4 border-end">
+                <h5>Status do Pedido</h5>
+                <form action="/Order/UpdateOrderStatus" method="POST">
+                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                    
+                    <select name="newStatus" class="form-select mb-2">
+                        <option value="0" @(pedidoInfo.StatusPedido == "Em análise" ? "selected" : "")>Em análise</option>
+                        <option value="1" @(pedidoInfo.StatusPedido == "Confirmado" ? "selected" : "")>Confirmado</option>
+                        <option value="2" @(pedidoInfo.StatusPedido == "Cancelado" ? "selected" : "")>Cancelado</option>
+                        <option value="3" @(pedidoInfo.StatusPedido == "Pronto p/ retirada" ? "selected" : "")>Pronto p/ retirada</option>
+                        <option value="4" @(pedidoInfo.StatusPedido == "Negado" ? "selected" : "")>Negado</option>
+                        <option value="5" @(pedidoInfo.StatusPedido == "Finalizado" ? "selected" : "")>Finalizado</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Atualizar Pedido</button>
+                </form>
             </div>
-            <hr>
-            <div class="d-flex justify-content-between fw-semibold">
-                <span>Total:</span>
-                <span>R$ 47,00</span>
+
+            <div class="col-md-4">
+                <h5>Status do Pagamento</h5>
+                <form action="/Order/UpdatePaymentStatus" method="POST">
+                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                    
+                    <select name="newStatus" class="form-select mb-2">
+                        <option value="0" @(pedidoInfo.StatusPagamento == "Pendente" ? "selected" : "")>Pendente</option>
+                        <option value="1" @(pedidoInfo.StatusPagamento == "Pago" ? "selected" : "")>Pago</option>
+                        <option value="2" @(pedidoInfo.StatusPagamento == "Cancelado" ? "selected" : "")>Cancelado</option>
+                        <option value="3" @(pedidoInfo.StatusPagamento == "Estornado" ? "selected" : "")>Estornado</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Atualizar Pagamento</button>
+                </form>
+                    <hr class="my-4"> <h5>Status da Entrega</h5>
+                    @if (pedidoInfo.StatusEntrega == "Não Concluída")
+                    {
+                        <form action="/Order/UpdateDeliveryStatus" method="POST">
+                            <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                            
+                            <select name="newStatus" class="form-select mb-2">
+                                <option value="0" selected>Não Concluída</option>
+                                <option value="1">Concluída</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Atualizar Entrega</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="text-success fw-bold">
+                            <i class="fa-solid fa-check-circle"></i> 
+                            Entrega Concluída
+                            @if(pedidoInfo.DataEntrega != null)
+                            {
+                                <br><small class="text-muted">em @pedidoInfo.DataEntrega</small>
+                            }
+                        </p>
+                    }
             </div>
+
         </div>
     </div>
-
-    <div class="text-center mt-4">
-        <a href="~/Order/History" class="btn btn-outline-primary">Voltar aos pedidos</a>
-    </div>
-
 </div>

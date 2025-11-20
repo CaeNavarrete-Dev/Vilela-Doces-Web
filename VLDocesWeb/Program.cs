@@ -1,5 +1,6 @@
 //Builder
 using VLDocesWeb.Repositories;
+using VLDocesWeb.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 var builder = WebApplication.CreateBuilder(args);

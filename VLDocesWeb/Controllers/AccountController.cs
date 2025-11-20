@@ -24,6 +24,9 @@ public class AccountController : Controller
     [HttpGet]
     public ActionResult Login()
     {
+        //logica para salca o id no ato de logar
+        
+
         return View(new LoginViewModel());
     }
     [HttpPost]

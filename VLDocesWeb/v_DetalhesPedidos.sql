@@ -1,7 +1,7 @@
 use db_Vilela_Doces
 go
 
-create view v_DetalhesPedidos
+alter view v_DetalhesPedidos
 as 
 select p.id_pedido Pedido, p.total Total, p.data_hora Data, 
       case p.status
@@ -32,14 +32,14 @@ select p.id_pedido Pedido, p.total Total, p.data_hora Data,
         when 1 then 'Concluída'
       end StatusEntrega,
       ender.nome Endereco
-from Pedidos p, Pessoas cli, Pessoas col, Produtos pr, Itens_Pedidos ip, 
-    Pagamentos pag, Entregas e, Enderecos ender
-where p.id_cliente = cli.id_pessoa and
-      p.id_colaborador = col.id_pessoa and
-      p.id_pedido = ip.id_pedido and 
-      ip.id_produto = pr.id_produto and 
-      p.id_pedido = pag.id_pedido and 
-      p.id_pedido = e.id_pedido and 
-      e.id_endereco = ender.id_endereco
+from Pedidos p
+inner join Pessoas cli on p.id_cliente = cli.id_pessoa
+left join Pessoas col on p.id_colaborador = col.id_pessoa
+inner join Itens_Pedidos ip on p.id_pedido = ip.id_pedido
+inner join Produtos pr on ip.id_produto = pr.id_produto
+left join Pagamentos pag on p.id_pedido = pag.id_pedido
+left join Entregas e on p.id_pedido = e.id_pedido
+left join Enderecos ender on e.id_endereco = ender.id_endereco
+go
 
 select * from v_DetalhesPedidos

@@ -1,7 +1,7 @@
 use db_Vilela_Doces
 go
 
-ALTER PROCEDURE p_RegistraPedido
+create PROCEDURE p_RegistraPedido
     @total money, 
     @id_cliente int, 
     @forma_pagamento int, 
@@ -16,7 +16,6 @@ BEGIN
     DECLARE @Data_Hora_Pedido DATETIME = GETDATE(); 
     DECLARE @data_limite_pagamento DATETIME;
 
-    BEGIN TRAN
     BEGIN TRY
         
         INSERT INTO Pedidos (total, frete, observacoes, data_hora, status, id_cliente)
@@ -39,12 +38,9 @@ BEGIN
         INSERT INTO Entregas (data_prazo, status, id_pedido, id_endereco)
         VALUES (DATEADD(day, 1, @Data_Hora_Pedido), 0, @ID_Pedido, @id_endereco);
 
-        COMMIT
-        RETURN 1
+        SELECT @ID_Pedido
     END TRY
     BEGIN CATCH
-        IF @@TRANCOUNT > 0
-            ROLLBACK
         
         RETURN 0
     END CATCH
@@ -54,10 +50,10 @@ GO
 DECLARE @Resultado INT;
 
 EXEC @Resultado = p_RegistraPedido 
-    @total = 12, 
+    @total = 47, 
     @id_cliente = 2, 
-    @forma_pagamento = 0, 
-    @id_endereco = 1;
+    @forma_pagamento = 1, 
+    @id_endereco = 2;
 
 -- Verifica o retorno
 SELECT 
@@ -70,3 +66,4 @@ SELECT
 SELECT TOP 1 * FROM Pedidos ORDER BY id_pedido DESC;
 SELECT TOP 1 * FROM Pagamentos ORDER BY id_pedido DESC;
 SELECT TOP 1 * FROM Entregas ORDER BY id_pedido DESC;
+

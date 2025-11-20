@@ -12,7 +12,7 @@
         <input type="hidden" name="TotalGeral" value="@Model.TotalGeral" />
 
         <div class="form-check p-3 mb-3 border-bottom payment-option">
-          <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoDinheiro" value="0" checked onchange="handlePaymentChange()">
+          <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoDinheiro" value=0 checked onchange="handlePaymentChange()">
           <label class="form-check-label ms-2 d-block" for="opcaoDinheiro">
               <strong class="text-dark">Dinheiro (Pagamento na Entrega)</strong>
               <p class="mb-0 text-muted">Informe se precisará de troco no próximo passo.</p>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="form-check p-3 mb-3 border-bottom payment-option">
-          <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoPix" value="1" onchange="handlePaymentChange()">
+          <input class="form-check-input" type="radio" name="formaPagamento" id="opcaoPix" value=1 onchange="handlePaymentChange()">
           <label class="form-check-label ms-2 d-block" for="opcaoPix">
               <strong class="text-dark">PIX</strong>
               <p class="mb-0 text-muted">Pagamento instantâneo. O pedido só será processado após a confirmação do PIX.</p>
