@@ -124,14 +124,33 @@ public class OrderController : Controller
         return View("Payment", summary);
     }
 
-    public ActionResult Details()
+    public ActionResult Details(int id)
     {
-        return View("Details");
+        var idCliente = (int)HttpContext.Session.GetInt32("UserId");
+
+        var order = _orderRepository.GetById(id);
+        var items = _orderRepository.ListarItensPorPedido(id);
+
+        // Passamos a Order como Model principal, e os Itens via ViewBag
+        ViewBag.OrderItems = items;
+        return View("Details", order);
     }
 
     public ActionResult History()
     {
-        return View("History");
+        var idClienteSession = HttpContext.Session.GetInt32("UserId");
+
+        if (!idClienteSession.HasValue || idClienteSession.Value <= 0)
+        {
+            // Se o ID não for encontrado ou for 0/negativo, redireciona.
+            return RedirectToAction("Login", "Account"); 
+        }
+
+        int idCliente = idClienteSession.Value;
+
+        var orders = _orderRepository.ListarPorCliente(idCliente);
+
+        return View("History", orders);
     }
 
     [HttpGet]

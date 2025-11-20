@@ -1,53 +1,109 @@
-<!DOCTYPE html>
-<html>
+@model List<VLDocesWeb.Models.Order>
+
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "History";
+    ViewData["Title"] = "Histórico de Pedidos";
+
+    // Função para traduzir o status do pedido
+    string TraduzStatus(int status)
+    {
+        return status switch
+        {
+            0 => "Em análise",
+            1 => "Confirmado",
+            2 => "Cancelado",
+            3 => "Pronto p/ retirada",
+            4 => "Negado",
+            5 => "Finalizado",
+            _ => "Desconhecido"
+        };
+    } 
 }
 
 <nav class="navbar bg-light px-4">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-      <a href="~/Initial/Index" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button"><i class="bi bi-arrow-left"></i></a>
+        <a href="~/Initial/Index" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
 
         <span class="navbar-brand mb-0 h4">Seus Pedidos</span>
 
         <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+            <button class="btn btn-light dropdown-toggle d-none" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                Filtrar
+                Filtrar Status
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">Últimos pedidos</a></li>
-                <li><a class="dropdown-item" href="#">Em andamento</a></li>
-                <li><a class="dropdown-item" href="#">Concluídos</a></li>
+                <li>
+                    @* Opção para listar TODOS os pedidos (volta para o History sem filtro) *@
+                    <a class="dropdown-item" href="@Url.Action("History", "Order")">
+                        Todos
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                
+                @* Links dinâmicos para ListarPorStatus, reutilizando o filtro do Admin *@
+                @for (int i = 0; i <= 5; i++)
+                {
+                    <li>
+                        <a class="dropdown-item" 
+                           href="@Url.Action("ListarPorStatus", "Order", new { status = i })">
+                            @TraduzStatus(i)
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
     </div>
 </nav>
-<div class="d-flex justify-content-center my-4">
-  <div class="card shadow-sm border-0" style="max-width: 700px; width: 100%;">
-    <div class="row g-0 align-items-center">
-      <div class="col-md-3">
-        <img src="~/lib/img_doceTeste.jpeg" class="img-fluid rounded-start p-2" alt="Produto">
-      </div>
-      <div class="col-md-9">
-        <div class="card-body">
-          <p class="text-muted mb-1 small">
-           Pedido realizado em:(data da compra) 
-          </p>
 
-          <h6 class="card-title mb-2 fw-semibold">
-            Nome do Produto
-          </h6>
-
-          <p class="text-muted mb-2 small">Data e hora da entrega</p>
-
-          <div class="d-flex gap-2">
-            <a href="/Order/Cart" class="btn btn-primary btn-sm fw-semibold">Comprar novamente</a>
-            <a href="/Order/Details" class="btn btn-outline-secondary btn-sm">Ver o pedido</a>
-          </div>
+@if (!Model.Any())
+{
+    <div class="d-flex justify-content-center my-5">
+        <div class="alert alert-info text-center" style="max-width: 700px; width: 100%;">
+            Você não possui pedidos registrados no momento.
         </div>
-      </div>
     </div>
-  </div>
-</div>
+}
+else
+{
+    @* Loop para renderizar um card para CADA PEDIDO *@
+    @foreach (var order in Model)
+    {
+        <div class="d-flex justify-content-center my-4">
+            <div class="card shadow-sm border-0" style="max-width: 700px; width: 100%;">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-3">
+                        @* Imagem Placeholder (A View Order/Details geralmente mostra os itens reais) *@
+                        <img src="~/lib/img_doceTeste.jpeg" class="img-fluid rounded-start p-2" alt="Produto">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <p class="text-muted mb-1 small">
+                                Pedido #<b>@order.Id </b> realizado em: <b>@order.Data.ToString("dd/MM/yyyy HH:mm")</b>
+                            </p>
+
+                            <h6 class="card-title mb-2 fw-semibold">
+                                Total: @order.Total.ToString("C")
+                            </h6>
+
+                            @* Exibir o Status do Pedido *@
+                            <p class="text-muted mb-2 small fw-bold">
+                                Status: @TraduzStatus(order.Status)
+                            </p>
+
+                            <div class="d-flex gap-2">
+                                @* O link "Comprar novamente" geralmente leva para um Action que recria o pedido no carrinho *@
+                                <a href="/Order/Cart" class="btn btn-primary btn-sm fw-semibold d-none">Comprar novamente</a>
+                                
+                                @* Link para os detalhes do pedido, passando o ID do pedido *@
+                                <a href="@Url.Action("Details", "Order", new { id = order.Id })" 
+                                   class="btn btn-outline-secondary btn-sm">Ver o pedido</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
