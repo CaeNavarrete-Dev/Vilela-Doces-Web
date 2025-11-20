@@ -124,7 +124,7 @@ public class OrderController : Controller
         return View("Payment", summary);
     }
 
-    public ActionResult Details(int id)
+    public ActionResult DetailsVini(int id)
     {
         var idCliente = (int)HttpContext.Session.GetInt32("UserId");
 
@@ -133,7 +133,7 @@ public class OrderController : Controller
 
         // Passamos a Order como Model principal, e os Itens via ViewBag
         ViewBag.OrderItems = items;
-        return View("Details", order);
+        return View("DetailsVini", order);
     }
 
     public ActionResult History()

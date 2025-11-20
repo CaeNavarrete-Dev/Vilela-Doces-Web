@@ -230,5 +230,111 @@ namespace VLDocesWeb.Repositories
             cmd.Parameters.AddWithValue("@orderId", orderId);
             cmd.ExecuteNonQuery();
         }
+
+        public List<Order> ListarPorCliente(int idCliente)
+        {
+            var lista = new List<Order>();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+
+            cmd.CommandText = "SELECT * FROM Pedidos WHERE id_cliente = @idCliente ORDER BY id_pedido DESC";
+            cmd.Parameters.AddWithValue("@idCliente", idCliente);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int id_colaborador;
+                    if (reader.IsDBNull(reader.GetOrdinal("id_colaborador")))
+                    {
+                        id_colaborador = 0;
+                    }
+                    else
+                    {
+                        id_colaborador = (int)reader["id_colaborador"];
+                    }
+                    lista.Add(
+                        new Order
+                        {
+                            Id = (int)reader["id_pedido"],
+                            Total = (decimal)reader["total"],
+                            Data = (DateTime)reader["data_hora"],
+                            Status = (int)reader["status"],
+                            IdCliente = (int)reader["id_cliente"],
+                            IdColaborador = id_colaborador,
+                        }
+                    );
+                }
+            }
+            return lista;
+        }
+        public Order GetById(int id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "SELECT * FROM Pedidos WHERE id_pedido = @id_pedido";
+            cmd.Parameters.AddWithValue("@id_pedido", id);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    int id_colaborador;
+                    if (reader.IsDBNull(reader.GetOrdinal("id_colaborador")))
+                    {
+                        id_colaborador = 0;
+                    }
+                    else
+                    {
+                        id_colaborador = (int)reader["id_colaborador"];
+                    }
+                    return new Order
+                    {
+                        Id = (int)reader["id_pedido"],
+                        Total = (decimal)reader["total"],
+                        Data = (DateTime)reader["data_hora"],
+                        Status = (int)reader["status"],
+                        IdCliente = (int)reader["id_cliente"],
+                        IdColaborador = id_colaborador,
+                    };
+                }
+            }
+            return null;
+        }
+
+        public List<OrderItemViewModel> ListarItensPorPedido(int idPedido)
+        {
+            var lista = new List<OrderItemViewModel>();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            
+            cmd.CommandText = @"
+                SELECT 
+                    p.nome_produto, ip.quantidade, ip.preco_vend 
+                FROM 
+                    Itens_Pedidos ip  
+                INNER JOIN 
+                    Produtos p ON ip.id_produto = p.id_produto
+                WHERE 
+                    ip.id_pedido = @id_pedido";
+                    
+            cmd.Parameters.AddWithValue("@id_pedido", idPedido);
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    lista.Add(
+                        new OrderItemViewModel
+                        {
+                            NomeProduto = (string)reader["nome_produto"],
+                            Quantidade = (int)reader["quantidade"],
+                            PrecoUnitario = (decimal)reader["preco_vend"], 
+                        }
+                    );
+                }
+            }
+            return lista;
+        }
     }
 }
