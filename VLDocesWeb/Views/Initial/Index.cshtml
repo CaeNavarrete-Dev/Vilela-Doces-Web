@@ -17,15 +17,19 @@
 
     <div class="container d-flex justify-content-center align-items-center vh-100-custom">
         <div class="btn-container text-center">
-            
+    
             <h1 class="mb-5 text-dark">Bem-Vindo, @ViewBag.userName</h1>
 
-            <a href="../Order/Index" class="btn btn-custom d-block mb-3 p-3 text-center">
+            <a href="@Url.Action("Index", "Order", new { categoriaId = 1 })" class="btn btn-custom d-block mb-3 p-3 text-center">
                 Fazer Pedido
             </a>
 
+            <a href="@Url.Action("Index", "Order", new { categoriaId = 2 })" class="btn btn-custom d-block mb-3 p-3 text-center">
+                Fazer Encomenda
+            </a>
+
             <a href="../Order/History" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Histórico de Pedidos
+            Histórico de Pedidos
             </a>
         </div>
     </div>

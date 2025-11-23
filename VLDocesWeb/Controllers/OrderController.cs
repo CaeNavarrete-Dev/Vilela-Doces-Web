@@ -17,9 +17,25 @@ public class OrderController : Controller
         this._orderRepository = orderRepository;
     }
 
-    public ActionResult Index()
+    public ActionResult Index(int categoriaId = 1)
     {
-        var products = _productRepository.ListAllOrder();
+        HttpContext.Session.SetInt32("LastCategoryId", categoriaId);
+
+        List<Product> products;
+        if (categoriaId == 2)
+        {
+            products = _productRepository.ListAllPackage();
+            ViewData["PageTitle"] = "Faça sua Encomenda";
+            ViewBag.IsEncomenda = true;
+        }
+        else
+        {
+            products = _productRepository.ListAllOrder();
+            ViewData["PageTitle"] = "Pronta Entrega";
+            ViewBag.IsEncomenda = false;
+        }
+
+        ViewBag.CurrentCategory = categoriaId;
         return View(products);
     }
 
@@ -40,6 +56,10 @@ public class OrderController : Controller
     {
         List<CartItem> cart = GetCartFromSession();
         CartItem existeItem = null;
+        
+        // Variável para guardar a categoria e saber para onde voltar
+        int categoriaDestino = 1; 
+
         foreach (CartItem item in cart)
         {
             if (item.Produto.Id_Produto == id)
@@ -48,9 +68,11 @@ public class OrderController : Controller
                 break;
             }
         }
+
         if (existeItem != null)
         {
             existeItem.Quantidade += 1;
+            categoriaDestino = existeItem.Produto.Id_Categoria; // Pega a categoria do item existente
         }
         else
         {
@@ -63,10 +85,13 @@ public class OrderController : Controller
                     PrecoVendido = produto.Preco,
                     Quantidade = 1
                 });
+                categoriaDestino = produto.Id_Categoria; // Pega a categoria do novo produto
             }
         }
+        
         SaveCartSession(cart);
-        return RedirectToAction("Index");
+        
+        return RedirectToAction("Index", new { categoriaId = categoriaDestino });
     }
     private List<CartItem> GetCartFromSession()
     {
@@ -86,41 +111,68 @@ public class OrderController : Controller
         HttpContext.Session.SetString("Cart", cartJson);
     }
     [HttpPost]
-    public ActionResult RemoveToCart (int id)
+    public ActionResult RemoveToCart(int id)
     {
         var cart = GetCartFromSession();
         CartItem existeItem = null;
+        int categoriaDestino = 1;
 
         foreach (CartItem item in cart)
         {
             if (item.Produto.Id_Produto == id)
             {
                 existeItem = item;
+                break; 
             }
         }
+
         if (existeItem != null)
         {
+            categoriaDestino = existeItem.Produto.Id_Categoria;
+
             existeItem.Quantidade -= 1;
             if (existeItem.Quantidade == 0)
             {
                 cart.Remove(existeItem);
             }
         }
+        else
+        {
+            var prod = _productRepository.Read(id);
+            if(prod != null) categoriaDestino = prod.Id_Categoria;
+        }
+
         SaveCartSession(cart);
-        return RedirectToAction("Index");
+        
+        return RedirectToAction("Index", new { categoriaId = categoriaDestino });
     }
 
     [HttpGet]
     public ActionResult Cart()
     {
         List<CartItem> cart = GetCartFromSession();
+        
+        int lastCategory = HttpContext.Session.GetInt32("LastCategoryId") ?? 1;
+        ViewBag.LastCategoryId = lastCategory;
+
         return View("Cart", cart);
     }
 
     public ActionResult Payment()
     {
         var summaryString = HttpContext.Session.GetString("PaymentSummary");
+        if (string.IsNullOrEmpty(summaryString))
+        {
+           return RedirectToAction("Cart"); 
+        } 
+
         var summary = JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryString);
+        
+        var cart = GetCartFromSession();
+        // Consideramos encomenda se houver qualquer produto da categoria 2
+        bool temEncomenda = cart.Any(c => c.Produto.Id_Categoria == 2);
+        ViewBag.TemEncomenda = temEncomenda;
+
         return View("Payment", summary);
     }
 
@@ -131,7 +183,6 @@ public class OrderController : Controller
         var order = _orderRepository.GetById(id);
         var items = _orderRepository.ListarItensPorPedido(id);
 
-        // Passamos a Order como Model principal, e os Itens via ViewBag
         ViewBag.OrderItems = items;
         return View("DetailsVini", order);
     }
@@ -142,7 +193,6 @@ public class OrderController : Controller
 
         if (!idClienteSession.HasValue || idClienteSession.Value <= 0)
         {
-            // Se o ID não for encontrado ou for 0/negativo, redireciona.
             return RedirectToAction("Login", "Account"); 
         }
 
@@ -193,25 +243,48 @@ public class OrderController : Controller
     [HttpPost]
     public IActionResult ProcessPayment(PaymentSubmissionViewModel model)
     {
-        if (model.FormaPagamento == 0)
+        // 1. Recuperar carrinho para saber se é Encomenda ANTES de validar
+        var cart = GetCartFromSession();
+        bool temEncomenda = cart.Any(c => c.Produto.Id_Categoria == 2);
+
+        // 2. Validação: Pronta Entrega (Dinheiro)
+        // Só valida troco aqui se NÃO for encomenda e a forma for dinheiro (0)
+        if (!temEncomenda && model.FormaPagamento == 0)
         {
             if (model.NaoPrecisoTroco)
             {
                 model.ValorTroco = null; 
-            } else if (!model.NaoPrecisoTroco && (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral))
+            } 
+            else if (model.ValorTroco == null || model.ValorTroco <= model.TotalGeral)
             {
                 ModelState.AddModelError("ValorTroco", "Para troco, o valor deve ser maior que o Total a Pagar.");
             }
         }
-        
+
+        // 3. Validação: Encomenda
+        if (temEncomenda)
+        {
+            if (model.DataEntregaAgendada == null)
+                ModelState.AddModelError("DataEntregaAgendada", "A Data de entrega é obrigatória para encomendas.");
+            
+            // Validação do troco caso escolha opção 3 (Sinal Pix + Restante Dinheiro)
+            if (model.OpcaoPagamentoEncomenda == 3 && !model.NaoPrecisoTroco)
+            {
+                var metade = model.TotalGeral / 2;
+                if (model.ValorTroco.HasValue && model.ValorTroco < metade)
+                {
+                    ModelState.AddModelError("ValorTroco", $"O valor para troco deve ser maior que o valor a pagar na entrega ({metade:C2})");
+                }
+            }
+        }
+
         if (!ModelState.IsValid)
         {
+            ViewBag.TemEncomenda = temEncomenda; 
             return View("Payment", GetPaymentSummary());
         }
 
-        var cart = GetCartFromSession();
         var summary = GetPaymentSummary();
-
         var customerId = HttpContext.Session.GetInt32("UserId"); 
         var enderecoId = HttpContext.Session.GetInt32("AddressId");
 
@@ -225,7 +298,7 @@ public class OrderController : Controller
             summary, 
             model, 
             customerId.Value, 
-            enderecoId.Value 
+            enderecoId.Value
         );
 
         if (novoPedidoId > 0)
@@ -234,11 +307,12 @@ public class OrderController : Controller
             HttpContext.Session.Remove("PaymentSummary");
             HttpContext.Session.Remove("AddressId"); 
             
-            return RedirectToAction("Index","Initial");
+            return RedirectToAction("Index", "Initial");
         }
         else
         {
             ModelState.AddModelError(string.Empty, "Houve um erro ao processar seu pedido. Tente novamente.");
+            ViewBag.TemEncomenda = temEncomenda;
             return View("Payment", summary);
         }
     }
@@ -246,12 +320,10 @@ public class OrderController : Controller
     private PaymentSummaryViewModel GetPaymentSummary()
     {
         string summaryJson = HttpContext.Session.GetString("PaymentSummary");
-
         if (string.IsNullOrEmpty(summaryJson))
         {
-            return new PaymentSummaryViewModel();
-        }
-
+          return new PaymentSummaryViewModel();  
+        } 
         return JsonSerializer.Deserialize<PaymentSummaryViewModel>(summaryJson);
     }
 

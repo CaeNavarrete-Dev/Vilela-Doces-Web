@@ -4,9 +4,17 @@
     ViewData["Title"] = "Meu Carrinho";
     
     decimal total = 0;
-    foreach(var item in Model)
+    
+    int categoriaVolta = ViewBag.LastCategoryId ?? 1;
+
+    if (Model.Any())
     {
-        total += item.Produto.Preco * item.Quantidade;
+        categoriaVolta = Model.First().Produto.Id_Categoria;
+        
+        foreach(var item in Model)
+        {
+            total += item.Produto.Preco * item.Quantidade;
+        }
     }
 }
 
@@ -16,7 +24,7 @@
     @if (Model.Count == 0)
     {
         <div class="alert alert-info">Seu carrinho está vazio.</div>
-        <a href="/Order/Index" class="btn btn-primary">Ver Produtos</a>
+        <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-primary">Ver Produtos</a>
     }
     else
     {
@@ -55,7 +63,10 @@
         </table>
         
         <div class="text-end">
-            <a href="/Order/Index" class="btn btn-secondary">Continuar Comprando</a>
+            <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-secondary">
+                Continuar Comprando
+            </a>
+            
             <a href="/Address/Index" class="btn btn-success">Finalizar Pedido</a>
         </div>
     }

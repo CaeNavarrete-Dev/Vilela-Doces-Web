@@ -21,10 +21,23 @@ namespace VLDocesWeb.Repositories
 
                 cmd.Parameters.AddWithValue("@total", summary.TotalGeral);
                 cmd.Parameters.AddWithValue("@id_cliente", customerId);
-                cmd.Parameters.AddWithValue("@forma_pagamento", payment.FormaPagamento);
                 cmd.Parameters.AddWithValue("@id_endereco", enderecoId);
-                cmd.Parameters.AddWithValue("@observacoes", payment.Observacoes);
+                cmd.Parameters.AddWithValue("@observacoes", (object)payment.Observacoes ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@frete", summary.Frete);
+                
+                cmd.Parameters.AddWithValue("@forma_pagamento", payment.FormaPagamento);
+
+                // Parâmetros de Encomenda
+                if (payment.DataEntregaAgendada.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@data_entrega_agendada", payment.DataEntregaAgendada.Value);
+                    cmd.Parameters.AddWithValue("@opcao_pagamento_encomenda", payment.OpcaoPagamentoEncomenda);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@data_entrega_agendada", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@opcao_pagamento_encomenda", 0);
+                }
 
                 object result = cmd.ExecuteScalar();
 
