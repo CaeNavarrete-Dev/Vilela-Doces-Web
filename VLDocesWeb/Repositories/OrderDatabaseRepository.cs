@@ -349,5 +349,35 @@ namespace VLDocesWeb.Repositories
             }
             return lista;
         }
+
+        public void CancelOrder(int orderId)
+        {
+            //Para garantir que tudo ou nada será feit
+            SqlTransaction transaction = conn.BeginTransaction();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+
+            try
+            {
+                //Stts do pedido para cancelado
+                cmd.CommandText = "UPDATE Pedidos SET status = 2 WHERE id_pedido = @orderId";
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+                cmd.ExecuteNonQuery();
+
+                //stts pagamentyo para cancelado
+                cmd.Parameters.Clear();
+                cmd.CommandText = "UPDATE Pagamentos SET status = 2 WHERE id_pedido = @orderId";
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+                cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
     }
 }

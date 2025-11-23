@@ -366,4 +366,30 @@ public class OrderController : Controller
         _orderRepository.UpdateDeliveryStatus(orderId, newStatus);
         return RedirectToAction("Details", new { id = orderId });
     }
+    [HttpGet]
+    public IActionResult Cancel(int id)
+    {
+        var order = _orderRepository.GetById(id);
+        if(order == null)
+        {
+            TempData["Message"] = "Pedido não encontrado.";
+        }
+        else if (order.Status == 0)
+        {
+            try
+            {
+                _orderRepository.CancelOrder(id);
+                TempData["SuccessMessage"] = $"O Pedido número {id} foi cancelado com sucesso.";
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = $"Erro ao cancelar o Pedido número {id}.";
+            }
+        }
+        else
+        {
+            TempData["Message"] = $"O Pedido número {id} não pode ser cancelado pois já foi confirmado.";
+        }
+        return RedirectToAction("DetailsVini", new{id = id});
+    }
 }

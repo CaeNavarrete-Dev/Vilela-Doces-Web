@@ -16,4 +16,5 @@ public interface IOrderRepository
     void UpdatePaymentStatus(int orderId, int newStatus);
     void AssignCollaborator(int orderId, int collaboratorId);
     void UpdateDeliveryStatus(int orderId, int newStatus);
+    void CancelOrder(int orderId);
 }

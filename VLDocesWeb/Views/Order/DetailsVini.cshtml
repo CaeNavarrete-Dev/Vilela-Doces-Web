@@ -44,6 +44,15 @@
                     @TraduzStatus(Model.Status)
                 </span>
             </p>
+            @if (Model.Status == 0) // Status 0 é "Em análise"
+            {
+                <hr class="my-3"/>
+                <div class="text-end">
+                    <a href="~/Order/Cancel/@Model.Id" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> Cancelar Pedido
+                    </a>
+                </div>
+            }
         </div>
     </div>
 
@@ -54,7 +63,6 @@
             <div class="card shadow-sm border-0 mb-3">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-2 text-center">
-                        @* **OBS:** Mantenha um placeholder ou ajuste para o caminho da imagem do produto *@
                         <img src="~/lib/produto1.png" class="img-fluid p-2 rounded" alt="@item.NomeProduto">
                     </div>
                     <div class="col-md-7">
@@ -75,13 +83,12 @@
     {
         <div class="alert alert-warning text-center">Nenhum item encontrado para este pedido.</div>
     }
-
+    
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h6 class="fw-semibold mb-3">Resumo do Pedido</h6>
             <div class="d-flex justify-content-between">
                 <span>Subtotal:</span>
-                @* Calculado somando todos os subtotais ou usando o valor Total do Model *@
                 <span>@Model.Total.ToString("C")</span> 
             </div>
             <div class="d-flex justify-content-between">
