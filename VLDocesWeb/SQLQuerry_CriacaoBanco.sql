@@ -61,12 +61,11 @@ go
 
 ---- Endereço da Loja ----
 insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf) 
-values('Loja oficial', 'Rua dos Bobos', 'nº0', 'Jd. dos Bobos', '12345123', 'Potirendaba', 'SP')
+values('Retirada na Loja', 'Rua dos Bobos', 'nº0', 'Jd. dos Bobos', '12345123', 'Potirendaba', 'SP')
 go
 insert into Enderecos(nome, rua, numero, bairro, cep, cidade, uf, id_cliente) 
 values('Casa', 'São Carlos', '360', 'Jd. Europa', '15014480', 'São José do Rio Preto', 'SP', 2)
 GO
-
 
 ----//Categorias//
 create table Categorias
