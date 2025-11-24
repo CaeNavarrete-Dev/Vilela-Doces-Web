@@ -1,7 +1,7 @@
 USE db_Vilela_Doces
 GO
 
-ALTER PROCEDURE p_RegistraPedido
+create PROCEDURE p_RegistraPedido
     @total money, 
     @id_cliente int, 
     @id_endereco int,

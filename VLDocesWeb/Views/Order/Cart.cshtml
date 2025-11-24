@@ -4,70 +4,178 @@
     ViewData["Title"] = "Meu Carrinho";
     
     decimal total = 0;
-    
     int categoriaVolta = ViewBag.LastCategoryId ?? 1;
 
     if (Model.Any())
     {
         categoriaVolta = Model.First().Produto.Id_Categoria;
-        
-        foreach(var item in Model)
-        {
-            total += item.Produto.Preco * item.Quantidade;
-        }
+        total = Model.Sum(item => item.Produto.Preco * item.Quantidade);
     }
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">Meu Carrinho</h2>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+        --cor-bege: #fff5ee;
+    }
+
+    .card-carrinho {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: none;
+        padding: 2rem;
+    }
+
+    .table-carrinho thead th {
+        border-top: none;
+        color: var(--cor-marrom);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .table-carrinho td {
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 1rem 0.5rem;
+    }
+
+    /* Imagem do produto no carrinho */
+    .img-carrinho {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 15px;
+    }
+
+    .btn-remover {
+        color: #dc3545;
+        border: 1px solid #dc3545;
+        background: transparent;
+        border-radius: 50px;
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        transition: 0.3s;
+    }
+    .btn-remover:hover {
+        background: #dc3545;
+        color: white;
+    }
+
+    .total-box {
+        background-color: var(--cor-bege);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .btn-finalizar {
+        background-color: #28a745;
+        color: white;
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: bold;
+        border: none;
+        transition: 0.3s;
+    }
+    .btn-finalizar:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    
+    <div class="d-flex align-items-center mb-4">
+        <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 class="m-0" style="color: #8B4513; font-weight: 700;">Meu Carrinho</h2>
+    </div>
 
     @if (Model.Count == 0)
     {
-        <div class="alert alert-info">Seu carrinho está vazio.</div>
-        <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-primary">Ver Produtos</a>
+        <div class="card-carrinho text-center py-5">
+            <i class="fas fa-shopping-basket fa-4x mb-3 text-muted"></i>
+            <h4 class="text-muted">Seu carrinho está vazio</h4>
+            <p class="mb-4">Que tal adicionar algumas delícias?</p>
+            <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-primary rounded-pill px-4">Ver Cardápio</a>
+        </div>
     }
     else
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Preço Unit.</th>
-                    <th>Quantidade</th>
-                    <th>Subtotal</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Produto.Nome</td>
-                        <td>R$ @item.Produto.Preco.ToString("C2")</td>
-                        <td>@item.Quantidade</td>
-                        <td>R$ @((item.Produto.Preco * item.Quantidade).ToString("C2"))</td>
-                        <td>
-                            <form action="/Order/RemoveToCart/@item.Produto.Id_Produto" method="POST">
-                                <button type="submit" class="btn btn-danger btn-sm">Remover</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                    <td colspan="2"><strong>R$ @total.ToString("C2")</strong></td>
-                </tr>
-            </tfoot>
-        </table>
-        
-        <div class="text-end">
-            <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="btn btn-secondary">
-                Continuar Comprando
-            </a>
-            
-            <a href="/Address/Index" class="btn btn-success">Finalizar Pedido</a>
+        <div class="card card-carrinho">
+            <div class="table-responsive">
+                <table class="table table-carrinho">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Produto</th>
+                            <th>Preço Unit.</th>
+                            <th>Qtd.</th>
+                            <th>Subtotal</th>
+                            <th></th> </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/lib/img_doceTeste.jpeg" class="img-carrinho shadow-sm" alt="@item.Produto.Nome">
+                                        <span class="fw-bold text-dark">@item.Produto.Nome</span>
+                                    </div>
+                                </td>
+                                <td>@item.Produto.Preco.ToString("C2")</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
+                                        @item.Quantidade
+                                    </span>
+                                </td>
+                                <td class="fw-bold text-success">
+                                    @((item.Produto.Preco * item.Quantidade).ToString("C2"))
+                                </td>
+                                <td class="text-end">
+                                    <form action="/Order/RemoveToCart/@item.Produto.Id_Produto" method="POST">
+                                        <button type="submit" class="btn-remover">
+                                            <i class="fas fa-trash-alt me-1"></i> Remover
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row justify-content-end">
+                <div class="col-md-5 col-lg-4">
+                    <div class="total-box">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal:</span>
+                            <strong>@total.ToString("C2")</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
+                            <span class="fs-5 fw-bold" style="color: #8B4513;">Total:</span>
+                            <span class="fs-4 fw-bold text-success">@total.ToString("C2")</span>
+                        </div>
+                        
+                        <div class="d-grid mt-4">
+                            <a href="/Address/Index" class="btn btn-finalizar shadow">
+                                Finalizar Pedido <i class="fas fa-check ms-2"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="@Url.Action("Index", "Order", new { categoriaId = categoriaVolta })" class="text-muted text-decoration-none small">
+                                <i class="fas fa-arrow-left me-1"></i> Continuar Comprando
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     }
 </div>

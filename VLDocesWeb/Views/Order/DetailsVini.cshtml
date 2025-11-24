@@ -3,10 +3,8 @@
     Layout = "_Layout";
     ViewData["Title"] = "Detalhes do Pedido";
 
-    // Recupera a lista de itens passada pelo Controller
     var items = ViewBag.OrderItems as List<VLDocesWeb.Models.OrderItemViewModel>;
     
-    // Função para traduzir o status do pedido (copiada do ListOrder.cshtml)
     string TraduzStatus(int status)
     {
         return status switch
@@ -20,91 +18,146 @@
             _ => "Desconhecido"
         };
     } 
+
+    // Cores e Ícones baseados no Status
+    string statusClass = Model.Status switch {
+        0 => "text-warning",
+        1 => "text-primary",
+        2 => "text-danger",
+        3 => "text-info",
+        4 => "text-danger",
+        5 => "text-success",
+        _ => "text-secondary"
+    };
+
+    string statusIcon = Model.Status switch {
+        0 => "fa-clock",
+        1 => "fa-check-circle",
+        2 => "fa-times-circle",
+        3 => "fa-box-open",
+        4 => "fa-ban",
+        5 => "fa-star",
+        _ => "fa-question-circle"
+    };
 }
 
-<a href="~/Order/History" class="btn btn-outline-secondary btn-lg mb-2" tabindex="-1" role="button">
-    <i class="bi bi-arrow-left"></i> Voltar
-</a>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+    }
+    .card-detalhes {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background-color: white;
+    }
+    .img-item {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .item-row {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 1rem 0;
+    }
+    .item-row:last-child {
+        border-bottom: none;
+    }
+</style>
 
-<div class="container my-4">
+<div class="container mt-4 mb-5">
 
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h5 class="fw-semibold mb-2">Pedido nº @Model.Id</h5>
-            <p class="text-muted mb-1">
-                Realizado em: 
-                <span class="fw-semibold">
-                    @Model.Data.ToString("dd MMMM yyyy") 
-                    às @Model.Data.ToString("HH:mm")
-                </span>
-            </p>
-            <p class="text-muted mb-0">
-                Status: 
-                <span class="fw-semibold text-dark">
-                    @TraduzStatus(Model.Status)
-                </span>
-            </p>
-            @if (Model.Status == 0) // Status 0 é "Em análise"
-            {
-                <hr class="my-3"/>
-                <div class="text-end">
-                    <a href="~/Order/Cancel/@Model.Id" class="btn btn-danger">
-                        <i class="bi bi-x-circle"></i> Cancelar Pedido
+    <div class="d-flex align-items-center mb-4">
+        <a href="~/Order/History" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 class="m-0" style="color: #8B4513; font-weight: 700;">Detalhes do Pedido #@Model.Id</h2>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-lg-8 mb-4">
+            
+            <div class="card card-detalhes mb-4 p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1 text-uppercase fw-bold">Status Atual</p>
+                        <h4 class="fw-bold @statusClass mb-0">
+                            <i class="fas @statusIcon me-2"></i> @TraduzStatus(Model.Status)
+                        </h4>
+                        <p class="text-muted small mt-2 mb-0">
+                            Realizado em @Model.Data.ToString("dd/MM/yyyy") às @Model.Data.ToString("HH:mm")
+                        </p>
+                    </div>
+                    
+                    @if (Model.Status == 0) 
+                    {
+                        <div>
+                            <a href="~/Order/Cancel/@Model.Id" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                <i class="fas fa-times me-1"></i> Cancelar Pedido
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card card-detalhes p-4">
+                <h5 class="mb-3 fw-bold text-dark">Itens do Pedido</h5>
+                
+                @if (items != null && items.Any())
+                {
+                    @foreach (var item in items)
+                    {
+                        <div class="d-flex align-items-center item-row">
+                            <img src="~/lib/img_doceTeste.jpeg" class="img-item shadow-sm me-3" alt="@item.NomeProduto">
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-0 text-dark">@item.NomeProduto</h6>
+                                <small class="text-muted">@item.PrecoUnitario.ToString("C2") un.</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-light text-dark border rounded-pill px-3 py-1 mb-1">x @item.Quantidade</span>
+                                <p class="fw-bold mb-0 text-success">@item.Subtotal.ToString("C2")</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning text-center border-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Nenhum item encontrado.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card card-detalhes p-4 bg-light">
+                <h5 class="mb-3 fw-bold" style="color: #8B4513;">Resumo Financeiro</h5>
+                
+                <div class="d-flex justify-content-between mb-2 text-muted small">
+                    <span>Subtotal</span>
+                    <span>@Model.Total.ToString("C2")</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-muted small">
+                    <span>Frete</span>
+                    <span>R$ 0,00</span> 
+                </div>
+                
+                <hr>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-5 fw-bold text-dark">Total Pago</span>
+                    <span class="fs-4 fw-bold text-success">@Model.Total.ToString("C2")</span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <a href="~/Order/History" class="btn btn-outline-secondary rounded-pill">
+                        Voltar aos Pedidos
                     </a>
                 </div>
-            }
-        </div>
-    </div>
-
-    @if (items != null && items.Any())
-    {
-        @foreach (var item in items)
-        {
-            <div class="card shadow-sm border-0 mb-3">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-2 text-center">
-                        <img src="~/lib/produto1.png" class="img-fluid p-2 rounded" alt="@item.NomeProduto">
-                    </div>
-                    <div class="col-md-7">
-                        <div class="card-body">
-                            <h6 class="fw-semibold mb-1">@item.NomeProduto</h6>
-                            <p class="text-muted small mb-1">Quantidade: @item.Quantidade</p>
-                            <p class="fw-semibold text-dark mb-0">
-                                @item.Subtotal.ToString("C") 
-                                (@item.PrecoUnitario.ToString("C") unit.)
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <div class="alert alert-warning text-center">Nenhum item encontrado para este pedido.</div>
-    }
-    
-    <div class="card shadow-sm border-0 mt-4">
-        <div class="card-body">
-            <h6 class="fw-semibold mb-3">Resumo do Pedido</h6>
-            <div class="d-flex justify-content-between">
-                <span>Subtotal:</span>
-                <span>@Model.Total.ToString("C")</span> 
-            </div>
-            <div class="d-flex justify-content-between">
-                <span>Frete:</span>
-                <span>R$ 0,00</span>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between fw-semibold">
-                <span>Total:</span>
-                <span>@Model.Total.ToString("C")</span>
             </div>
         </div>
-    </div>
 
-    <div class="text-center mt-4">
-        <a href="~/Order/History" class="btn btn-outline-primary">Voltar aos pedidos</a>
     </div>
-
 </div>

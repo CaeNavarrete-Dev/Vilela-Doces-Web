@@ -1,163 +1,310 @@
 @model List<VLDocesWeb.Models.OrderDetailsModel>
 @{
     Layout = "_Layout";
-    // Vamos pegar o primeiro item da lista para os dados gerais
     var pedidoInfo = Model.First();
-    ViewData["Title"] = "Detalhes do Pedido #" + pedidoInfo.Pedido;
+    ViewData["Title"] = "Gestão do Pedido #" + pedidoInfo.Pedido;
+
+    // Função auxiliar para cores de status
+    string GetStatusColor(string status)
+    {
+        return status switch {
+            "Confirmado" => "bg-primary",
+            "Finalizado" => "bg-success",
+            "Cancelado" => "bg-danger",
+            "Negado" => "bg-danger",
+            "Pronto p/ retirada" => "bg-info text-dark",
+            _ => "bg-warning text-dark" // Em análise
+        };
+    }
 }
 
-<div class="container mt-4">
-    <div class="row mb-3">
-        <div class="col">
-            <a href="/Order/ListOrder" class="btn btn-outline-secondary">
-                <i class="fa-solid fa-arrow-left"></i> Voltar para Lista
-            </a>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+        --cor-bege: #fff5ee;
+    }
+
+    .card-detalhe-admin {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background-color: white;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header-admin {
+        background-color: var(--cor-marrom);
+        color: white;
+        font-weight: bold;
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        padding: 1rem 1.5rem;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        display: block;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #212529;
+        margin-bottom: 1rem;
+    }
+
+    /* Tabela de Itens */
+    .table-itens thead th {
+        background-color: var(--cor-bege);
+        color: var(--cor-marrom);
+        border: none;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    /* Ações do Colaborador */
+    .action-box {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        height: 100%;
+        border: 1px solid #eee;
+    }
+
+    .action-title {
+        color: var(--cor-marrom);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0.5rem;
+    }
+
+    .btn-atualizar {
+        background-color: var(--cor-marrom);
+        color: white;
+        width: 100%;
+        font-weight: 600;
+    }
+    .btn-atualizar:hover {
+        background-color: #A0522D;
+        color: white;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    
+    <div class="d-flex align-items-center mb-4">
+        <a href="/Order/ListOrder" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="m-0" style="color: #8B4513; font-weight: 700;">Pedido #@pedidoInfo.Pedido</h2>
+            <span class="text-muted small">Gerenciamento do Pedido</span>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white">
-            <h4 class="mb-0">Pedido #@pedidoInfo.Pedido</h4>
+    <div class="card card-detalhe-admin">
+        <div class="card-header-admin">
+            <i class="fas fa-info-circle me-2"></i> Informações Gerais
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <div class="row">
-                <div class="col-md-4">
-                    <strong>Cliente:</strong> @pedidoInfo.Cliente (ID: @pedidoInfo.IdCliente)<br>
-                    <strong>Data:</strong> @pedidoInfo.Data.ToString("dd/MM/yyyy HH:mm")<br>
-                    <strong>Colaborador:</strong> @pedidoInfo.Colaborador
+                <div class="col-md-4 border-end">
+                    <span class="info-label">Cliente</span>
+                    <div class="info-value">
+                        @pedidoInfo.Cliente <span class="text-muted small">(ID: @pedidoInfo.IdCliente)</span>
+                    </div>
+
+                    <span class="info-label">Data do Pedido</span>
+                    <div class="info-value">
+                        @pedidoInfo.Data.ToString("dd/MM/yyyy") às @pedidoInfo.Data.ToString("HH:mm")
+                    </div>
+
+                    <span class="info-label">Colaborador Responsável</span>
+                    <div class="info-value">
+                        @if(pedidoInfo.Colaborador == "Nenhum") {
+                            <span class="text-warning fw-bold"><i class="fas fa-exclamation-triangle"></i> Pendente</span>
+                        } else {
+                            <span class="text-success fw-bold"><i class="fas fa-user-check"></i> @pedidoInfo.Colaborador</span>
+                        }
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <strong>Status Pedido:</strong> <span class="badge bg-primary">@pedidoInfo.StatusPedido</span><br>
-                    <strong>Status Pagamento:</strong> <span class="badge bg-warning text-dark">@pedidoInfo.StatusPagamento</span><br>
-                    <strong>Status Entrega:</strong> <span class="badge bg-info text-dark">@pedidoInfo.StatusEntrega</span>
+
+                <div class="col-md-4 border-end">
+                    <span class="info-label">Status do Pedido</span>
+                    <div class="info-value">
+                        <span class="badge rounded-pill @GetStatusColor(pedidoInfo.StatusPedido) px-3">
+                            @pedidoInfo.StatusPedido
+                        </span>
+                    </div>
+
+                    <span class="info-label">Status do Pagamento</span>
+                    <div class="info-value">
+                        <span class="badge rounded-pill @(pedidoInfo.StatusPagamento == "Pago" ? "bg-success" : "bg-warning text-dark")">
+                            @pedidoInfo.StatusPagamento
+                        </span>
+                    </div>
+
+                    <span class="info-label">Status da Entrega</span>
+                    <div class="info-value">
+                        <span class="badge rounded-pill @(pedidoInfo.StatusEntrega == "Concluída" ? "bg-success" : "bg-secondary")">
+                            @pedidoInfo.StatusEntrega
+                        </span>
+                    </div>
                 </div>
+
                 <div class="col-md-4">
-                    <strong>Forma Pagamento:</strong> @pedidoInfo.FormaPagamento<br>
-                    <strong>Endereço Entrega:</strong> @pedidoInfo.Endereco<br>
-                    <strong>Observações:</strong> @pedidoInfo.Observacoes
+                    <span class="info-label">Forma de Pagamento</span>
+                    <div class="info-value">@pedidoInfo.FormaPagamento</div>
+
+                    <span class="info-label">Endereço de Entrega</span>
+                    <div class="info-value">@pedidoInfo.Endereco</div>
+
+                    @if(!string.IsNullOrEmpty(pedidoInfo.Observacoes)) {
+                        <div class="alert alert-warning py-2 px-3 mb-0">
+                            <small class="fw-bold d-block mb-1">OBSERVAÇÕES DO CLIENTE:</small>
+                            @pedidoInfo.Observacoes
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Itens Inclusos</h5>
+    <div class="card card-detalhe-admin">
+        <div class="card-header bg-white border-bottom p-3">
+            <h5 class="m-0 fw-bold" style="color: var(--cor-marrom);">Itens do Pedido</h5>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead class="table-light">
+        <div class="table-responsive">
+            <table class="table table-itens mb-0">
+                <thead>
                     <tr>
                         <th>Produto</th>
                         <th>Descrição</th>
-                        <th>Preço Vendido</th>
-                        <th>Qtd.</th>
-                        <th>Subtotal</th>
+                        <th>Preço Unit.</th>
+                        <th class="text-center">Qtd.</th>
+                        <th class="text-end">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Produto</td>
-                            <td>@item.Descricao</td>
+                            <td class="fw-bold">@item.Produto</td>
+                            <td class="text-muted small">@item.Descricao</td>
                             <td>@item.PrecoVendido.ToString("C2")</td>
-                            <td>@item.Quantidade</td>
-                            <td>@item.PrecoItem.ToString("C2")</td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border">@item.Quantidade</span>
+                            </td>
+                            <td class="text-end fw-bold text-success">@item.PrecoItem.ToString("C2")</td>
                         </tr>
                     }
                 </tbody>
                 <tfoot>
-                    <tr classD="table-dark text-white">
-                        <td colspan="4" class="text-end"><strong>Total (com frete):</strong></td>
-                        <td><strong>@pedidoInfo.Total.ToString("C2")</strong></td>
+                    <tr style="background-color: #f8f9fa;">
+                        <td colspan="4" class="text-end text-uppercase small text-muted fw-bold pt-3">Total Geral</td>
+                        <td class="text-end fs-5 fw-bold text-dark pt-3">@pedidoInfo.Total.ToString("C2")</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-    <div class="card-header">
-        <h5 class="mb-0">Ações do Colaborador</h5>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            
-            <div class="col-md-4 border-end">
-                <h5>Atribuição</h5>
-                @if (pedidoInfo.Colaborador == "Nenhum")
-                {
-                    <p>Este pedido não tem um colaborador.</p>
-                    <form action="/Order/AssignToMe" method="POST">
-                        <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa-solid fa-user-check"></i> Atribuir a mim
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <p>Gerenciado por: <strong>@pedidoInfo.Colaborador</strong></p>
-                }
-            </div>
+    <div class="card card-detalhe-admin">
+        <div class="card-header-admin bg-dark">
+            <i class="fas fa-cogs me-2"></i> Painel de Controle (Colaborador)
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-4">
+                
+                <div class="col-md-4">
+                    <div class="action-box">
+                        <h6 class="action-title">Responsabilidade</h6>
+                        @if (pedidoInfo.Colaborador == "Nenhum")
+                        {
+                            <p class="small text-muted mb-3">Este pedido ainda não tem dono.</p>
+                            <form action="/Order/AssignToMe" method="POST">
+                                <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                                <button type="submit" class="btn btn-success w-100 fw-bold">
+                                    <i class="fas fa-hand-paper me-2"></i> Atribuir a Mim
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="text-center py-3">
+                                <i class="fas fa-user-check fa-2x text-success mb-2"></i>
+                                <p class="mb-0 fw-bold">@pedidoInfo.Colaborador</p>
+                                <small class="text-muted">Colaborador Responsável</small>
+                            </div>
+                        }
+                    </div>
+                </div>
 
-            <div class="col-md-4 border-end">
-                <h5>Status do Pedido</h5>
-                <form action="/Order/UpdateOrderStatus" method="POST">
-                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
-                    
-                    <select name="newStatus" class="form-select mb-2">
-                        <option value="0" @(pedidoInfo.StatusPedido == "Em análise" ? "selected" : "")>Em análise</option>
-                        <option value="1" @(pedidoInfo.StatusPedido == "Confirmado" ? "selected" : "")>Confirmado</option>
-                        <option value="2" @(pedidoInfo.StatusPedido == "Cancelado" ? "selected" : "")>Cancelado</option>
-                        <option value="3" @(pedidoInfo.StatusPedido == "Pronto p/ retirada" ? "selected" : "")>Pronto p/ retirada</option>
-                        <option value="4" @(pedidoInfo.StatusPedido == "Negado" ? "selected" : "")>Negado</option>
-                        <option value="5" @(pedidoInfo.StatusPedido == "Finalizado" ? "selected" : "")>Finalizado</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Atualizar Pedido</button>
-                </form>
-            </div>
-
-            <div class="col-md-4">
-                <h5>Status do Pagamento</h5>
-                <form action="/Order/UpdatePaymentStatus" method="POST">
-                    <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
-                    
-                    <select name="newStatus" class="form-select mb-2">
-                        <option value="0" @(pedidoInfo.StatusPagamento == "Pendente" ? "selected" : "")>Pendente</option>
-                        <option value="1" @(pedidoInfo.StatusPagamento == "Pago" ? "selected" : "")>Pago</option>
-                        <option value="2" @(pedidoInfo.StatusPagamento == "Cancelado" ? "selected" : "")>Cancelado</option>
-                        <option value="3" @(pedidoInfo.StatusPagamento == "Estornado" ? "selected" : "")>Estornado</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Atualizar Pagamento</button>
-                </form>
-                    <hr class="my-4"> <h5>Status da Entrega</h5>
-                    @if (pedidoInfo.StatusEntrega == "Não Concluída")
-                    {
-                        <form action="/Order/UpdateDeliveryStatus" method="POST">
+                <div class="col-md-4">
+                    <div class="action-box">
+                        <h6 class="action-title">Status do Pedido</h6>
+                        <form action="/Order/UpdateOrderStatus" method="POST">
                             <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
-                            
-                            <select name="newStatus" class="form-select mb-2">
-                                <option value="0" selected>Não Concluída</option>
-                                <option value="1">Concluída</option>
+                            <select name="newStatus" class="form-select mb-3">
+                                <option value="0" @(pedidoInfo.StatusPedido == "Em análise" ? "selected" : "")>Em análise</option>
+                                <option value="1" @(pedidoInfo.StatusPedido == "Confirmado" ? "selected" : "")>Confirmado</option>
+                                <option value="3" @(pedidoInfo.StatusPedido == "Pronto p/ retirada" ? "selected" : "")>Pronto p/ retirada</option>
+                                <option value="5" @(pedidoInfo.StatusPedido == "Finalizado" ? "selected" : "")>Finalizado</option>
+                                <option value="2" @(pedidoInfo.StatusPedido == "Cancelado" ? "selected" : "")>Cancelado</option>
+                                <option value="4" @(pedidoInfo.StatusPedido == "Negado" ? "selected" : "")>Negado</option>
                             </select>
-                            <button type="submit" class="btn btn-primary btn-sm">Atualizar Entrega</button>
+                            <button type="submit" class="btn btn-atualizar btn-sm">Atualizar Status</button>
                         </form>
-                    }
-                    else
-                    {
-                        <p class="text-success fw-bold">
-                            <i class="fa-solid fa-check-circle"></i> 
-                            Entrega Concluída
-                            @if(pedidoInfo.DataEntrega != null)
-                            {
-                                <br><small class="text-muted">em @pedidoInfo.DataEntrega</small>
-                            }
-                        </p>
-                    }
-            </div>
+                    </div>
+                </div>
 
+                <div class="col-md-4">
+                    <div class="action-box">
+                        <h6 class="action-title">Financeiro & Logística</h6>
+                        
+                        <form action="/Order/UpdatePaymentStatus" method="POST" class="mb-3">
+                            <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                            <label class="small text-muted fw-bold mb-1">Pagamento</label>
+                            <div class="input-group input-group-sm">
+                                <select name="newStatus" class="form-select">
+                                    <option value="0" @(pedidoInfo.StatusPagamento == "Pendente" ? "selected" : "")>Pendente</option>
+                                    <option value="1" @(pedidoInfo.StatusPagamento == "Pago" ? "selected" : "")>Pago</option>
+                                    <option value="2" @(pedidoInfo.StatusPagamento == "Cancelado" ? "selected" : "")>Cancelado</option>
+                                </select>
+                                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
+                            </div>
+                        </form>
+
+                        @if (pedidoInfo.StatusEntrega == "Não Concluída")
+                        {
+                            <form action="/Order/UpdateDeliveryStatus" method="POST">
+                                <input type="hidden" name="orderId" value="@pedidoInfo.Pedido" />
+                                <label class="small text-muted fw-bold mb-1">Entrega</label>
+                                <div class="input-group input-group-sm">
+                                    <select name="newStatus" class="form-select">
+                                        <option value="0" selected>Pendente</option>
+                                        <option value="1">Concluída</option>
+                                    </select>
+                                    <button class="btn btn-outline-success" type="submit"><i class="fas fa-check"></i></button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success py-2 px-3 mb-0 text-center">
+                                <i class="fas fa-truck mb-1"></i><br>
+                                <small class="fw-bold">Entrega Concluída</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

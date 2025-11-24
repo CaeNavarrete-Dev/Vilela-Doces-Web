@@ -1,12 +1,83 @@
-<!DOCTYPE html>
-<html>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Home";
 }
 
-<div class= "card card-style w-50 mx-auto">
-<h1>Boas vindas!</h1>
-<a href="/Account/Login" class="btn btn-primary btn-lg mx-2 mx-auto d-block">Entrar</a>
-<a href="/Account/Register">Criar Conta</a>
+<style>
+    /* Cor principal baseada no marrom do seu header */
+    :root {
+        --cor-primaria-doces: #8B4513; /* Marrom Chocolate */
+        --cor-secundaria-doces: #A0522D; /* Marrom mais claro */
+    }
+
+    .text-doce {
+        color: var(--cor-primaria-doces);
+    }
+
+    .btn-doce {
+        background-color: var(--cor-primaria-doces);
+        color: white;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-doce:hover {
+        background-color: var(--cor-secundaria-doces);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-doce {
+        color: var(--cor-primaria-doces);
+        border: 2px solid var(--cor-primaria-doces);
+        background-color: transparent;
+        transition: all 0.3s;
+    }
+
+    .btn-outline-doce:hover {
+        background-color: var(--cor-primaria-doces);
+        color: white;
+    }
+
+    .card-welcome {
+        border-radius: 20px; /* Bordas bem arredondadas ficam mais amigáveis */
+        border: none;
+        overflow: hidden; /* Garante que a imagem respeite a borda arredondada */
+    }
+</style>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    
+    <div class="card card-welcome shadow-lg" style="max-width: 900px; width: 100%;">
+        <div class="row g-0">
+            
+            <div class="col-md-6 d-none d-md-block" style="background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                <img src="~/lib/img_doceTeste.jpeg" class="img-fluid" alt="Deliciosos Doces" style="height: 100%; object-fit: cover; min-height: 400px;">
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="card-body p-5 text-center text-md-start">
+                    
+                    <h5 class="text-muted text-uppercase small ls-2">Bem-vindo à</h5>
+                    <h1 class="display-5 fw-bold text-doce mb-3">Vilela Doces</h1>
+                    
+                    <p class="card-text text-muted mb-4">
+                        Experimente o sabor caseiro e a qualidade que você merece. 
+                        Faça seu pedido ou encomende para sua festa!
+                    </p>
+
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="/Account/Login" class="btn btn-doce btn-lg px-4 me-md-2">
+                            Entrar
+                        </a>
+                        
+                        <a href="/Account/Register" class="btn btn-outline-doce btn-lg px-4">
+                            Criar Conta
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

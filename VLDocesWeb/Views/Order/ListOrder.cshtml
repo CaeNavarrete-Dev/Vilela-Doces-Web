@@ -3,9 +3,8 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Lista de Pedidos";
+    ViewData["Title"] = "Gerenciar Pedidos";
 
-    // Função para traduzir o status do pedido
     string TraduzStatus(int status)
     {
         return status switch
@@ -18,83 +17,169 @@
             5 => "Finalizado",
             _ => "Desconhecido"
         };
-    }   
+    }
+
+    string GetStatusBadgeClass(int status)
+    {
+        return status switch
+        {
+            0 => "bg-warning text-dark", // Em análise
+            1 => "bg-primary",           // Confirmado
+            2 => "bg-danger",            // Cancelado
+            3 => "bg-info text-dark",    // Pronto
+            4 => "bg-danger",            // Negado
+            5 => "bg-success",           // Finalizado
+            _ => "bg-secondary"
+        };
+    }
 }
 
-<div class="container mt-4">
-    <a href="~/InitialCo/Index" class="btn btn-outline-secondary btn-lg mb-3" tabindex="-1" role="button">
-        <i class="bi bi-arrow-left"></i> Voltar
-    </a>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+        --cor-bege: #fff5ee;
+    }
 
-    <h2 class="mb-4 text-center">🧾 Lista de Pedidos</h2>
+    .card-pedido-admin {
+        background-color: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
 
-    <div class="mb-4 text-center">
-    <h4 class="mb-3">Filtrar por Status:</h4>
+    .card-pedido-admin:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(139, 69, 19, 0.1);
+    }
 
-    <div class="dropdown d-inline-block">
-        <button class="btn btn-dark dropdown-toggle" type="button" 
-                id="dropdownStatusFilter" data-bs-toggle="dropdown" 
-                aria-expanded="false">
-            Status do Pedido
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownStatusFilter">
-            <li>
-                <a class="dropdown-item" href="@Url.Action("ListOrder", "Order")">
-                    Todos os Pedidos
-                </a>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            
-            @for (int i = 0; i <= 5; i++)
-            {
-                <li>
-                    <a class="dropdown-item" 
-                       href="@Url.Action("ListarPorStatus", "Order", new { status = i })">
-                        @TraduzStatus(i)
-                    </a>
-                </li>
-            }
-        </ul>
-    </div>
-</div>
+    .card-header-pedido {
+        background-color: var(--cor-bege);
+        color: var(--cor-marrom);
+        font-weight: bold;
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        border-bottom: 1px solid #eee;
+        padding: 1rem 1.25rem;
+    }
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var order in Model)
-        {
-            <div class="col">
-                <div class="card shadow-sm border-dark">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="card-title mb-0">Pedido #@order.Id</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Data:</strong> @order.Data.ToString("dd/MM/yyyy HH:mm")</p>
-                        <p><strong>Total:</strong> @order.Total.ToString("C")</p>
-                        <p><strong>Status:</strong> <span class="badge bg-dark">
-                            @TraduzStatus(order.Status)
-                        </span></p>
-                        <hr />
-                        <p><strong>Cliente ID:</strong> @order.IdCliente</p>
-                        <p><strong>Colaborador ID:</strong> @order.IdColaborador</p>
-                    </div>
-                    <div class="card-footer text-end">
-                        <a href="/Order/Details/@order.Id" class="btn btn-outline-primary btn-sm">
-                            Detalhes
+    .btn-filtro {
+        background-color: white;
+        border: 1px solid #ddd;
+        color: var(--cor-marrom);
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 8px 20px;
+        transition: 0.3s;
+    }
+    .btn-filtro:hover {
+        background-color: var(--cor-bege);
+        border-color: var(--cor-marrom);
+    }
+
+    .btn-detalhes-admin {
+        color: var(--cor-marrom);
+        border: 1px solid var(--cor-marrom);
+        border-radius: 50px;
+        padding: 5px 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .btn-detalhes-admin:hover {
+        background-color: var(--cor-marrom);
+        color: white;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <a href="~/InitialCo/Index" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h2 class="m-0" style="color: #8B4513; font-weight: 700;">Pedidos</h2>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-filtro dropdown-toggle shadow-sm" type="button" id="dropdownStatusFilter" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-filter me-2"></i> Filtrar Status
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow" aria-labelledby="dropdownStatusFilter">
+                <li><a class="dropdown-item fw-bold" href="@Url.Action("ListOrder", "Order")">Todos os Pedidos</a></li>
+                <li><hr class="dropdown-divider"></li>
+                @for (int i = 0; i <= 5; i++)
+                {
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("ListarPorStatus", "Order", new { status = i })">
+                            @TraduzStatus(i)
                         </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="card p-5 border-0 shadow-sm d-inline-block" style="border-radius: 20px;">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Nenhum pedido encontrado com este filtro.</h5>
+                <a href="@Url.Action("ListOrder", "Order")" class="btn btn-link text-decoration-none mt-2">Limpar filtros</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var order in Model)
+            {
+                <div class="col">
+                    <div class="card card-pedido-admin h-100">
+                        
+                        <div class="card-header-pedido d-flex justify-content-between align-items-center">
+                            <span>Pedido #@order.Id</span>
+                            <span class="badge rounded-pill @GetStatusBadgeClass(order.Status)">
+                                @TraduzStatus(order.Status)
+                            </span>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <small class="text-muted d-block">DATA</small>
+                                <strong>@order.Data.ToString("dd/MM/yyyy HH:mm")</strong>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted d-block">TOTAL</small>
+                                <strong class="text-success">@order.Total.ToString("C")</strong>
+                            </div>
+
+                            <hr class="my-3" style="border-color: #eee;">
+
+                            <div class="d-flex justify-content-between text-muted small mb-1">
+                                <span>Cliente ID:</span> <strong>@order.IdCliente</strong>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>Colaborador ID:</span> 
+                                @if(order.IdColaborador == 0) {
+                                    <span class="text-warning fw-bold">Pendente</span>
+                                } else {
+                                    <strong>@order.IdColaborador</strong>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pb-3 pt-0 text-end">
+                            <a href="/Order/Details/@order.Id" class="btn-detalhes-admin w-100 d-block text-center">
+                                Ver Detalhes
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
-
-<script>
-//Atualiza a pag sempre que mudo o status de um pedido
-//ou filtro pedidos
-$('form').on('submit', function(e){
-    e.preventDefault();
-    $.post($(this).attr('action'), $(this).serialize(), function(){
-        alert('Status atualizado!');
-        location.reload();
-    });
-});
-</script>

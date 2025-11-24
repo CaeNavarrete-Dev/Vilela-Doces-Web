@@ -215,3 +215,56 @@ body {
 #pix-details {
     border: 2px solid #28a745 !important;
 }
+
+/* --- Dashboard do Cliente --- */
+
+.card-dashboard {
+    border-radius: 20px;
+    border: none;
+    background-color: var(--cor-fundo-card); /* Branco */
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* Cartões de Ação (Botões Grandes) */
+.btn-dashboard-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #fff5ee; /* Bege clarinho */
+    border: 2px solid transparent;
+    border-radius: 15px;
+    color: var(--cor-primaria-doces); /* Marrom */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    height: 100%; 
+}
+
+.btn-dashboard-card:hover {
+    background-color: white;
+    border-color: var(--cor-primaria-doces);
+    transform: translateY(-5px); /* Efeito de subir */
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.15);
+    color: var(--cor-primaria-doces);
+}
+
+.dashboard-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--cor-primaria-doces);
+}
+
+.dashboard-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Estilo do Modal */
+.modal-header-doce {
+    background-color: var(--cor-primaria-doces);
+    color: white;
+}
+.modal-header-doce .btn-close {
+    filter: invert(1); /* Deixa o X branco */
+}

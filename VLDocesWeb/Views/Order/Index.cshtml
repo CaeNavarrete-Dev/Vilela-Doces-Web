@@ -1,41 +1,207 @@
 @model IEnumerable<VLDocesWeb.Models.Product>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = ViewData["PageTitle"] ?? "Order";
-
+    ViewData["Title"] = ViewData["PageTitle"] ?? "Cardápio";
 }
-<div class="container d-flex justify-content-between">
-    <a href="~/Initial/Index" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button"><i class="bi bi-arrow-left"></i></a>
-    <a href="\Order\Cart" class="btn btn-custom btn-lg" tabindex="-1" role="button">Ver Carrinho</a>
-</div>
-<div class="container page-order text-white">
+
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+        --cor-bege: #fff5ee;
+        --cor-verde-preco: #28a745;
+    }
+
+    /* Barra de Ferramentas (Topo) */
+    .toolbar-pedido {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .titulo-pagina {
+        color: var(--cor-marrom);
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* Card do Produto */
+    .card-produto {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: white;
+        overflow: hidden;
+        height: 100%; /* Garante altura igual na linha */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-produto:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(139, 69, 19, 0.15); /* Sombra marrom suave */
+    }
+
+    /* Imagem do Produto */
+    .img-produto-container {
+        height: 200px;
+        overflow: hidden;
+        background-color: #f8f9fa;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Corta a imagem para preencher sem esticar */
+    }
+
+    /* Corpo do Card */
+    .card-body-produto {
+        padding: 1.25rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .produto-titulo {
+        color: var(--cor-marrom);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .produto-desc {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* Área de Preço e Botões */
+    .produto-footer {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .produto-preco {
+        color: var(--cor-verde-preco);
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+
+    /* Botões de Quantidade (+ e -) */
+    .btn-qtd {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%; /* Botão Redondo */
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+    .btn-qtd-minus {
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    .btn-qtd-minus:hover {
+        background-color: #ced4da;
+    }
+
+    .btn-qtd-plus {
+        background-color: var(--cor-marrom);
+        color: white;
+    }
+    .btn-qtd-plus:hover {
+        background-color: #A0522D;
+        transform: scale(1.1);
+    }
+
+    /* Botão do Carrinho no Topo */
+    .btn-carrinho {
+        background-color: var(--cor-marrom);
+        color: white;
+        border-radius: 50px;
+        padding: 8px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .btn-carrinho:hover {
+        background-color: #A0522D;
+        color: white;
+    }
+</style>
+
+<div class="container mb-5">
+    
+    <div class="toolbar-pedido">
+        <a href="~/Initial/Index" class="btn btn-outline-secondary rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Voltar
+        </a>
+        
+        <h3 class="titulo-pagina d-none d-md-block">
+            @ViewData["Title"]
+        </h3>
+
+        <a href="\Order\Cart" class="btn-carrinho">
+            <i class="fas fa-shopping-cart me-1"></i> Carrinho
+        </a>
+    </div>
+
     @if(ViewBag.IsEncomenda == true)
     {
-        <div class="alert alert-warning text-dark mb-4 text-center">
-            <i class="fas fa-info-circle"></i> Produtos sob encomenda requerem sinal de 50% e agendamento.
+        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center mb-4 rounded-4" role="alert" style="background-color: #fff3cd; color: #856404;">
+            <i class="fas fa-clock fa-2x me-3"></i>
+            <div>
+                <strong>Atenção:</strong> Produtos sob encomenda requerem <strong>sinal de 50%</strong> e agendamento prévio.
+            </div>
         </div>
     }
-    <div class="row g-4">
 
+    <div class="row g-4">
         @foreach (var product in Model)
         {
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="card h-100">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card card-produto">
                     
-                    <img src="~/lib/img_doceTeste.jpeg" class="card-img-top" alt="@product.Nome" />
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Nome</h5>
-                        <p class="card-text">@product.Descricao</p>
-                        
-                        <p class="card-text fw-bold">R$ @product.Preco.ToString("C2")</p>
+                    <div class="img-produto-container">
+                        <img src="~/lib/img_doceTeste.jpeg" class="card-img-top" alt="@product.Nome" />
                     </div>
-                    <div class="card-body d-flex align-items-center gap-1">
-                        <form action="/Order/AddToCart/@product.Id_Produto" method="POST">
-                            <button type="submit" class="amount_button">+</button>
-                        </form>
-                        <form action="/Order/RemoveToCart/@product.Id_Produto" method="POST">
-                            <button type="submit" class="amount_button">-</button>
-                        </form>
+                    
+                    <div class="card-body-produto">
+                        <div>
+                            <h5 class="produto-titulo">@product.Nome</h5>
+                            <p class="produto-desc">@product.Descricao</p>
+                        </div>
+                        
+                        <div class="produto-footer">
+                            <span class="produto-preco">@product.Preco.ToString("C2")</span>
+                            
+                            <div class="d-flex align-items-center gap-2">
+                                <form action="/Order/RemoveToCart/@product.Id_Produto" method="POST">
+                                    <button type="submit" class="btn-qtd btn-qtd-minus" title="Remover um">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </form>
+
+                                <form action="/Order/AddToCart/@product.Id_Produto" method="POST">
+                                    <button type="submit" class="btn-qtd btn-qtd-plus shadow-sm" title="Adicionar ao carrinho">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

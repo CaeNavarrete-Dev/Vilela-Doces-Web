@@ -4,7 +4,6 @@
     Layout = "_Layout";
     ViewData["Title"] = "Histórico de Pedidos";
 
-    // Função para traduzir o status do pedido
     string TraduzStatus(int status)
     {
         return status switch
@@ -17,93 +16,139 @@
             5 => "Finalizado",
             _ => "Desconhecido"
         };
-    } 
-}
+    }
 
-<nav class="navbar bg-light px-4">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a href="~/Initial/Index" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button">
-            <i class="bi bi-arrow-left"></i> Voltar
-        </a>
-
-        <span class="navbar-brand mb-0 h4">Seus Pedidos</span>
-
-        <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle d-none" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Filtrar Status
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li>
-                    @* Opção para listar TODOS os pedidos (volta para o History sem filtro) *@
-                    <a class="dropdown-item" href="@Url.Action("History", "Order")">
-                        Todos
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                
-                @* Links dinâmicos para ListarPorStatus, reutilizando o filtro do Admin *@
-                @for (int i = 0; i <= 5; i++)
-                {
-                    <li>
-                        <a class="dropdown-item" 
-                           href="@Url.Action("ListarPorStatus", "Order", new { status = i })">
-                            @TraduzStatus(i)
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</nav>
-
-@if (!Model.Any())
-{
-    <div class="d-flex justify-content-center my-5">
-        <div class="alert alert-info text-center" style="max-width: 700px; width: 100%;">
-            Você não possui pedidos registrados no momento.
-        </div>
-    </div>
-}
-else
-{
-    @* Loop para renderizar um card para CADA PEDIDO *@
-    @foreach (var order in Model)
+    // Função auxiliar para definir a cor do badge de status
+    string GetStatusColor(int status)
     {
-        <div class="d-flex justify-content-center my-4">
-            <div class="card shadow-sm border-0" style="max-width: 700px; width: 100%;">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-3">
-                        @* Imagem Placeholder (A View Order/Details geralmente mostra os itens reais) *@
-                        <img src="~/lib/img_doceTeste.jpeg" class="img-fluid rounded-start p-2" alt="Produto">
-                    </div>
-                    <div class="col-md-9">
-                        <div class="card-body">
-                            <p class="text-muted mb-1 small">
-                                Pedido #<b>@order.Id </b> realizado em: <b>@order.Data.ToString("dd/MM/yyyy HH:mm")</b>
-                            </p>
+        return status switch
+        {
+            0 => "bg-warning text-dark", // Em análise (Amarelo)
+            1 => "bg-primary",           // Confirmado (Azul)
+            2 => "bg-danger",            // Cancelado (Vermelho)
+            3 => "bg-info text-dark",    // Pronto (Ciano)
+            4 => "bg-danger",            // Negado (Vermelho)
+            5 => "bg-success",           // Finalizado (Verde)
+            _ => "bg-secondary"
+        };
+    }
+}
 
-                            <h6 class="card-title mb-2 fw-semibold">
-                                Total: @order.Total.ToString("C")
-                            </h6>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+    }
 
-                            @* Exibir o Status do Pedido *@
-                            <p class="text-muted mb-2 small fw-bold">
-                                Status: @TraduzStatus(order.Status)
-                            </p>
+    .card-historico {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background-color: white;
+        transition: transform 0.2s;
+        overflow: hidden;
+    }
 
-                            <div class="d-flex gap-2">
-                                @* O link "Comprar novamente" geralmente leva para um Action que recria o pedido no carrinho *@
-                                <a href="/Order/Cart" class="btn btn-primary btn-sm fw-semibold d-none">Comprar novamente</a>
-                                
-                                @* Link para os detalhes do pedido, passando o ID do pedido *@
-                                <a href="@Url.Action("DetailsVini", "Order", new { id = order.Id })" 
-                                   class="btn btn-outline-secondary btn-sm">Ver o pedido</a>
+    .card-historico:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 69, 19, 0.1);
+    }
+
+    .img-historico {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        min-height: 140px;
+    }
+
+    .btn-detalhes {
+        color: var(--cor-marrom);
+        border: 1px solid var(--cor-marrom);
+        border-radius: 50px;
+        padding: 5px 15px;
+        font-size: 0.9rem;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+    .btn-detalhes:hover {
+        background-color: var(--cor-marrom);
+        color: white;
+    }
+    
+    /* Título da Página */
+    .page-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    
+    <div class="page-header justify-content-between">
+        <div class="d-flex align-items-center">
+            <a href="~/Initial/Index" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h2 class="m-0" style="color: #8B4513; font-weight: 700;">Seus Pedidos</h2>
+        </div>
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="card-historico p-5 d-inline-block">
+                <i class="fas fa-receipt fa-4x mb-3 text-muted"></i>
+                <h4 class="text-muted">Nenhum pedido encontrado</h4>
+                <p class="text-muted small mb-4">Você ainda não fez pedidos com esse status.</p>
+                <a href="~/Initial/Index" class="btn btn-primary rounded-pill px-4">Fazer um Pedido</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-10 col-lg-8 mb-4">
+                    <div class="card card-historico">
+                        <div class="row g-0">
+                            <div class="col-4 col-sm-3">
+                                <img src="~/lib/img_doceTeste.jpeg" class="img-historico" alt="Imagem do Pedido">
+                            </div>
+                            
+                            <div class="col-8 col-sm-9">
+                                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                                    
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="card-title fw-bold mb-1 text-dark">Pedido #@order.Id</h6>
+                                            <p class="card-text text-muted small mb-0">
+                                                <i class="far fa-calendar-alt me-1"></i> @order.Data.ToString("dd/MM/yyyy HH:mm")
+                                            </p>
+                                        </div>
+                                        <span class="badge rounded-pill @GetStatusColor(order.Status) px-3">
+                                            @TraduzStatus(order.Status)
+                                        </span>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span class="text-muted small">Total:</span>
+                                        <span class="fs-5 fw-bold text-success">@order.Total.ToString("C")</span>
+                                    </div>
+
+                                    <div class="mt-3 text-end">
+                                        <a href="@Url.Action("DetailsVini", "Order", new { id = order.Id })" class="btn-detalhes">
+                                            Ver detalhes
+                                        </a>
+                                    </div>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     }
-}
+</div>

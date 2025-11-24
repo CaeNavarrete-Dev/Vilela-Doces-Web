@@ -1,55 +1,207 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+@using Microsoft.AspNetCore.Http
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Initial";
+    ViewData["Title"] = "Painel do Colaborador";
 }
-<body>
 
-    <div class="header-usuario d-flex justify-content-between align-items-center px-3">
-        
-        <div>
-            <button type="button" class="btn btn-outline-dark btn-custom btn-custom:hover" data-bs-toggle="modal" data-bs-target="#modalMinhaConta">
-                Minha Conta
-            </button>
-        </div>
-    </div>
+<style>
+    :root {
+        --cor-marrom: #8B4513;
+        --cor-bege: #fff5ee;
+        --cor-fundo-card: #ffffff;
+    }
 
-    <div class="container d-flex justify-content-center align-items-center vh-100-custom">
-        <div class="btn-container text-center">
+    .card-dashboard {
+        border-radius: 20px;
+        border: none;
+        background-color: var(--cor-fundo-card);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        color: #6c757d;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Cartões de Ação Admin */
+    .btn-admin-card {
+        display: flex;
+        flex-direction: row; /* Ícone ao lado do texto */
+        align-items: center;
+        padding: 1.5rem;
+        background-color: white;
+        border: 1px solid #eee;
+        border-radius: 15px;
+        color: var(--cor-marrom);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        height: 100%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .btn-admin-card:hover {
+        background-color: var(--cor-bege);
+        border-color: var(--cor-marrom);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+        color: var(--cor-marrom);
+    }
+
+    .admin-icon {
+        font-size: 2rem;
+        margin-right: 1rem;
+        color: var(--cor-marrom);
+        background-color: var(--cor-bege);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+    .btn-admin-card:hover .admin-icon {
+        background-color: white;
+    }
+
+    .admin-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: block;
+    }
+    
+    .admin-desc {
+        font-size: 0.85rem;
+        color: #6c757d;
+        display: block;
+        margin-top: 2px;
+    }
+
+    /* Botão Minha Conta */
+    .btn-outline-conta {
+        color: var(--cor-marrom);
+        border: 2px solid var(--cor-marrom);
+        background-color: transparent;
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .btn-outline-conta:hover {
+        background-color: var(--cor-marrom);
+        color: white;
+    }
+    
+    .modal-header-doce {
+        background-color: var(--cor-marrom);
+        color: white;
+    }
+</style>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    
+    <div class="card card-dashboard w-100" style="max-width: 1000px;">
+        <div class="card-body p-4 p-md-5">
             
-            <h1 class="mb-5 text-dark">Bem-Vindo, @ViewBag.userName</h1>
-
-            <a href="../Product/Create" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Adicionar produto
-            </a>
-
-            <a href="../Product/ListAll" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Listagem de produtos
-            </a>
-
-            <a href="~/Order/ListOrder" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Listagem de pedidos
-            </a>
-        </div>
-    </div>
-    <div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-labelledby="modalMinhaContaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalMinhaContaLabel">Dados da Conta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+                <div class="text-center text-md-start mb-3 mb-md-0">
+                    <h2 class="fw-bold" style="color: #8B4513;">Bem-vindo, @ViewBag.userName</h2>
+                    <p class="text-muted mb-0">Painel de Controle Administrativo</p>
                 </div>
-                <div class="modal-body">
-                    <p><strong>Nome:</strong> @ViewBag.userName</p>
-                    <p><strong>Email:</strong> @ViewBag.userEmail</T>
-                    <p><strong>Telefone:</strong> @ViewBag.userTelefone</T>
+                
+                <button type="button" class="btn btn-outline-conta" data-bs-toggle="modal" data-bs-target="#modalMinhaConta">
+                    <i class="fas fa-user-cog me-2"></i> Minha Conta
+                </button>
+            </div>
+
+            <div class="row g-4">
+                
+                <div class="col-lg-6">
+                    <h6 class="section-title">Gestão de Pedidos</h6>
+                    <div class="d-grid gap-3">
+                        
+                        <a href="~/Order/ListOrder" class="btn-admin-card">
+                            <div class="admin-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div>
+                                <span class="admin-title">Lista de Pedidos</span>
+                                <span class="admin-desc">Gerenciar status e entregas</span>
+                            </div>
+                        </a>
+
+                        </div>
                 </div>
-                <div class="modal-footer">
-                    <a href="/Account/Logout" class="btn btn-danger">Sair</a>
+
+                <div class="col-lg-6">
+                    <h6 class="section-title">Catálogo</h6>
+                    <div class="d-grid gap-3">
+                        
+                        <a href="../Product/Create" class="btn-admin-card">
+                            <div class="admin-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div>
+                                <span class="admin-title">Novo Produto</span>
+                                <span class="admin-desc">Cadastrar item no cardápio</span>
+                            </div>
+                        </a>
+
+                        <a href="../Product/ListAll" class="btn-admin-card">
+                            <div class="admin-icon">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div>
+                                <span class="admin-title">Gerenciar Produtos</span>
+                                <span class="admin-desc">Editar ou remover itens</span>
+                            </div>
+                        </a>
+
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header modal-header-doce">
+                <h5 class="modal-title">
+                    <i class="fas fa-id-card-alt me-2"></i> Dados do Colaborador
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="small text-muted fw-bold">NOME</label>
+                    <p class="fs-5 text-dark">@ViewBag.userName</p>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label class="small text-muted fw-bold">E-MAIL</label>
+                        <p class="text-dark">@ViewBag.userEmail</p>
+                    </div>
+                    <div class="col-12">
+                        <label class="small text-muted fw-bold">TELEFONE</label>
+                        <p class="text-dark">@ViewBag.userTelefone</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="/Account/Logout" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt me-1"></i> Sair
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

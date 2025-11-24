@@ -1,7 +1,7 @@
 use db_Vilela_Doces
 go
 
-alter view v_DetalhesPedidos
+create view v_DetalhesPedidos
 as 
 select p.id_pedido Pedido, p.total Total, p.data_hora Data, 
       case p.status

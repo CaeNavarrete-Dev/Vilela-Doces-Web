@@ -39,6 +39,8 @@ go
 --Colaborador Teste--
 insert into Pessoas (nome, telefone, email, senha, tipo_pessoa) values ('adm','17988145012','adm@gmail','123', 0)
 insert into Colaboradores values (1,'Adm teste')
+insert into Pessoas (nome, telefone, email, senha, tipo_pessoa) values ('caetano','17988145012','caetano@gmail','123', 1)
+insert into Clientes values (1,'48148148186')
 
 ----//Endereços//
 create table Enderecos

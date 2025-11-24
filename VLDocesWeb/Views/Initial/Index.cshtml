@@ -1,56 +1,164 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Initial";
+    ViewData["Title"] = "Início";
 }
-<body>
 
-    <div class="header-usuario d-flex justify-content-between align-items-center px-3">
-        
-        <div>
-            <button type="button" class="btn btn-outline-dark btn-custom btn-custom:hover" data-bs-toggle="modal" data-bs-target="#modalMinhaConta">
-                Minha Conta
-            </button>
-        </div>
-    </div>
+<style>
+    :root {
+        --cor-primaria-doces: #8B4513; /* Marrom */
+        --cor-fundo-card: #ffffff;      /* Branco */
+        --cor-bege-claro: #fff5ee;      /* Bege para os botões */
+    }
 
-    <div class="container d-flex justify-content-center align-items-center vh-100-custom">
-        <div class="btn-container text-center">
+    /* O Card Principal (Fundo Branco) */
+    .card-dashboard {
+        border-radius: 20px;
+        border: none;
+        background-color: white !important; /* Força o branco */
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    /* Os Botões Grandes de Ação */
+    .btn-dashboard-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: var(--cor-bege-claro);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        color: var(--cor-primaria-doces);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        height: 100%;
+        width: 100%; /* Garante que o link ocupe a coluna toda */
+    }
+
+    .btn-dashboard-card:hover {
+        background-color: white;
+        border-color: var(--cor-primaria-doces);
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(139, 69, 19, 0.15);
+        color: var(--cor-primaria-doces);
+    }
+
+    .dashboard-icon {
+        font-size: 3rem; /* Ícones maiores */
+        margin-bottom: 1rem;
+        color: var(--cor-primaria-doces);
+    }
+
+    .dashboard-title {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #333; /* Texto um pouco mais escuro para leitura */
+    }
+
+    /* Estilos do Modal */
+    .modal-header-doce {
+        background-color: var(--cor-primaria-doces);
+        color: white;
+    }
     
-            <h1 class="mb-5 text-dark">Bem-Vindo, @ViewBag.userName</h1>
+    /* Botão Minha Conta (Outline) */
+    .btn-outline-conta {
+        color: var(--cor-primaria-doces);
+        border: 2px solid var(--cor-primaria-doces);
+        background-color: transparent;
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .btn-outline-conta:hover {
+        background-color: var(--cor-primaria-doces);
+        color: white;
+    }
+</style>
 
-            <a href="@Url.Action("Index", "Order", new { categoriaId = 1 })" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Fazer Pedido
-            </a>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    
+    <div class="card card-dashboard w-100" style="max-width: 900px;">
+        <div class="card-body p-4 p-md-5">
+            
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+                <div class="text-center text-md-start mb-3 mb-md-0">
+                    <h2 class="fw-bold" style="color: #8B4513;">Olá, @ViewBag.userName!</h2>
+                    <p class="text-muted mb-0">O que vamos pedir hoje?</p>
+                </div>
+                
+                <button type="button" class="btn btn-outline-conta" data-bs-toggle="modal" data-bs-target="#modalMinhaConta">
+                    <i class="fas fa-user-circle me-2"></i> Minha Conta
+                </button>
+            </div>
 
-            <a href="@Url.Action("Index", "Order", new { categoriaId = 2 })" class="btn btn-custom d-block mb-3 p-3 text-center">
-                Fazer Encomenda
-            </a>
+            <div class="row g-4">
+                
+                <div class="col-md-4">
+                    <a href="@Url.Action("Index", "Order", new { categoriaId = 1 })" class="btn-dashboard-card">
+                        <i class="fas fa-utensils dashboard-icon"></i>
+                        <span class="dashboard-title">Fazer Pedido</span>
+                        <small class="text-muted mt-2">Entrega Rápida</small>
+                    </a>
+                </div>
 
-            <a href="../Order/History" class="btn btn-custom d-block mb-3 p-3 text-center">
-            Histórico de Pedidos
-            </a>
-        </div>
-    </div>
-    <div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-labelledby="modalMinhaContaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalMinhaContaLabel">Dados da Conta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="col-md-4">
+                    <a href="@Url.Action("Index", "Order", new { categoriaId = 2 })" class="btn-dashboard-card">
+                        <i class="fas fa-birthday-cake dashboard-icon"></i>
+                        <span class="dashboard-title">Fazer Encomenda</span>
+                        <small class="text-muted mt-2">Para sua Festa</small>
+                    </a>
                 </div>
-                <div class="modal-body">
-                    <p><strong>Nome:</strong> @ViewBag.userName</p>
-                    <p><strong>Email:</strong> @ViewBag.userEmail</T>
-                    <p><strong>CPF:</strong> @ViewBag.userCPF</p>
-                    <p><strong>Telefone:</strong> @ViewBag.userTelefone</T>
+
+                <div class="col-md-4">
+                    <a href="../Order/History" class="btn-dashboard-card">
+                        <i class="fas fa-history dashboard-icon"></i>
+                        <span class="dashboard-title">Meus Pedidos</span>
+                        <small class="text-muted mt-2">Ver Histórico</small>
+                    </a>
                 </div>
-                <div class="modal-footer">
-                    <a href="/Account/Logout" class="btn btn-danger">Sair</a>
-                </div>
+
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header modal-header-doce">
+                <h5 class="modal-title">
+                    <i class="fas fa-id-badge me-2"></i> Dados da Conta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="small text-muted fw-bold">NOME</label>
+                    <p class="fs-5 text-dark">@ViewBag.userName</p>
+                </div>
+                <div class="mb-3">
+                    <label class="small text-muted fw-bold">E-MAIL</label>
+                    <p class="fs-5 text-dark">@ViewBag.userEmail</p>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label class="small text-muted fw-bold">CPF</label>
+                        <p class="text-dark">@ViewBag.userCPF</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="small text-muted fw-bold">TELEFONE</label>
+                        <p class="text-dark">@ViewBag.userTelefone</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="/Account/Logout" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt me-1"></i> Sair
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
